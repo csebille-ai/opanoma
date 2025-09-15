@@ -1,0 +1,1631 @@
+{
+  "metadata": {
+    "deck": "Tarot de Marseille",
+    "language": "fr",
+    "version": "1.0",
+    "generated": "2025-08-22",
+    "schema": {
+      "name": "Nom complet de la carte",
+      "arcana": "majeur|mineur",
+      "number": "0-21 (majeurs) ou None (mineurs)",
+      "suit": "Coupes|Deniers|Épées|Bâtons (mineurs)",
+      "rank": "As,2..10,Valet,Cavalier,Reine,Roi (mineurs)",
+      "upright": "Liste de mots-clés (sens droit)",
+      "reversed": "Liste de mots-clés (sens renversé)"
+    }
+  },
+  "cards": [
+    {
+      "name": "Le Mat",
+      "arcana": "majeur",
+      "number": 0,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "liberté",
+        "élan spontané",
+        "voyage",
+        "confiance",
+        "naïveté sacrée",
+        "nouveau départ"
+      ],
+      "reversed": [
+        "imprudence",
+        "errance",
+        "fuite",
+        "distraction",
+        "manque de direction",
+        "promesses non tenues"
+      ]
+    },
+    {
+      "name": "Le Bateleur",
+      "arcana": "majeur",
+      "number": 1,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "initiative",
+        "potentiel",
+        "débrouillardise",
+        "manifestation",
+        "talent",
+        "commencement"
+      ],
+      "reversed": [
+        "manque de focus",
+        "tromperie",
+        "manipulation",
+        "dilettantisme",
+        "opportunisme"
+      ]
+    },
+    {
+      "name": "La Papesse",
+      "arcana": "majeur",
+      "number": 2,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "intuition",
+        "secret",
+        "sagesse intérieure",
+        "retrait fécond",
+        "écoute",
+        "mystère"
+      ],
+      "reversed": [
+        "blocage intuitif",
+        "silence froid",
+        "secrets pesants",
+        "passivité",
+        "non‑dits"
+      ]
+    },
+    {
+      "name": "L’Impératrice",
+      "arcana": "majeur",
+      "number": 3,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "créativité",
+        "abondance",
+        "nourricière",
+        "communication",
+        "croissance",
+        "sensualité"
+      ],
+      "reversed": [
+        "dépendance",
+        "étouffement",
+        "stagnation créative",
+        "excès de confort",
+        "jalousie"
+      ]
+    },
+    {
+      "name": "L’Empereur",
+      "arcana": "majeur",
+      "number": 4,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "structure",
+        "stabilité",
+        "autorité",
+        "protection",
+        "discipline",
+        "ancrage"
+      ],
+      "reversed": [
+        "rigidité",
+        "contrôle excessif",
+        "autoritarisme",
+        "peur du changement",
+        "inflexibilité"
+      ]
+    },
+    {
+      "name": "Le Pape",
+      "arcana": "majeur",
+      "number": 5,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "conseil",
+        "tradition",
+        "transmission",
+        "éthique",
+        "bénédiction",
+        "cadre"
+      ],
+      "reversed": [
+        "dogmatisme",
+        "conformisme vide",
+        "culpabilité",
+        "moralisme",
+        "leçon mal vécue"
+      ]
+    },
+    {
+      "name": "L’Amoureux",
+      "arcana": "majeur",
+      "number": 6,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "choix du cœur",
+        "attraction",
+        "valeurs partagées",
+        "carrefour",
+        "relation",
+        "engagement"
+      ],
+      "reversed": [
+        "indécision",
+        "tentation",
+        "ambiguïté",
+        "dépendance affective",
+        "mauvais alignement"
+      ]
+    },
+    {
+      "name": "Le Chariot",
+      "arcana": "majeur",
+      "number": 7,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "victoire",
+        "volonté",
+        "maîtrise de soi",
+        "progression",
+        "déplacement",
+        "affirmation"
+      ],
+      "reversed": [
+        "précipitation",
+        "égo",
+        "éparpillement",
+        "conflit intérieur",
+        "perte de contrôle"
+      ]
+    },
+    {
+      "name": "La Justice",
+      "arcana": "majeur",
+      "number": 8,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "équilibre",
+        "vérité",
+        "responsabilité",
+        "décision juste",
+        "contrat",
+        "clarté"
+      ],
+      "reversed": [
+        "partialité",
+        "injustice",
+        "flou juridique",
+        "retard de décision",
+        "dureté de jugement"
+      ]
+    },
+    {
+      "name": "L’Hermite",
+      "arcana": "majeur",
+      "number": 9,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "retraite",
+        "recherche",
+        "prudence",
+        "maturation",
+        "sagesse",
+        "lenteur utile"
+      ],
+      "reversed": [
+        "isolement",
+        "rumination",
+        "peur d’agir",
+        "retard stérile",
+        "fermeture"
+      ]
+    },
+    {
+      "name": "La Roue de Fortune",
+      "arcana": "majeur",
+      "number": 10,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "changement de cycle",
+        "opportunité",
+        "destin en mouvement",
+        "synchronicités",
+        "tournant"
+      ],
+      "reversed": [
+        "instabilité",
+        "imprévisibilité",
+        "résistance au changement",
+        "chance manquée",
+        "cycle répétitif"
+      ]
+    },
+    {
+      "name": "La Force",
+      "arcana": "majeur",
+      "number": 11,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "courage calme",
+        "maîtrise des instincts",
+        "persévérance",
+        "douce fermeté",
+        "confiance en soi"
+      ],
+      "reversed": [
+        "épuisement",
+        "colère rentrée",
+        "doute",
+        "forcer les choses",
+        "domination"
+      ]
+    },
+    {
+      "name": "Le Pendu",
+      "arcana": "majeur",
+      "number": 12,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "pause volontaire",
+        "regard neuf",
+        "lâcher‑prise",
+        "sacrifice utile",
+        "suspension"
+      ],
+      "reversed": [
+        "blocage",
+        "victimisation",
+        "inertie",
+        "retard subi",
+        "auto‑sabotage"
+      ]
+    },
+    {
+      "name": "L’Arcane sans nom",
+      "arcana": "majeur",
+      "number": 13,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "fin nécessaire",
+        "mue",
+        "transformation",
+        "nettoyage",
+        "renouveau",
+        "libération"
+      ],
+      "reversed": [
+        "peur du changement",
+        "attachement au passé",
+        "deuil non fait",
+        "stagnation lourde"
+      ]
+    },
+    {
+      "name": "Tempérance",
+      "arcana": "majeur",
+      "number": 14,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "harmonie",
+        "alchimie",
+        "patience",
+        "soin",
+        "modération",
+        "fluidité"
+      ],
+      "reversed": [
+        "déséquilibre",
+        "dispersion",
+        "impatience",
+        "excès",
+        "mélange qui ne prend pas"
+      ]
+    },
+    {
+      "name": "Le Diable",
+      "arcana": "majeur",
+      "number": 15,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "désir",
+        "puissance brute",
+        "magnétisme",
+        "matérialité",
+        "lucidité sur l’ombre"
+      ],
+      "reversed": [
+        "dépendance",
+        "manipulation",
+        "tentation toxique",
+        "enchaînement",
+        "obsession"
+      ]
+    },
+    {
+      "name": "La Maison Dieu",
+      "arcana": "majeur",
+      "number": 16,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "révélation",
+        "libération soudaine",
+        "vérité qui éclate",
+        "réinitialisation",
+        "éveil brutal"
+      ],
+      "reversed": [
+        "choc",
+        "perte de repères",
+        "rupture",
+        "crise",
+        "déconstruction pénible"
+      ]
+    },
+    {
+      "name": "L’Étoile",
+      "arcana": "majeur",
+      "number": 17,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "espoir",
+        "guidance",
+        "douceur",
+        "guérison",
+        "inspiration",
+        "confiance en la vie"
+      ],
+      "reversed": [
+        "doute",
+        "découragement",
+        "perte de foi",
+        "attentes irréalistes",
+        "vulnérabilité"
+      ]
+    },
+    {
+      "name": "La Lune",
+      "arcana": "majeur",
+      "number": 18,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "rêves",
+        "imagination",
+        "intuition profonde",
+        "cycle",
+        "inconscient",
+        "hypersensibilité"
+      ],
+      "reversed": [
+        "confusion",
+        "illusions",
+        "peurs",
+        "autosuggestion",
+        "secrets flous"
+      ]
+    },
+    {
+      "name": "Le Soleil",
+      "arcana": "majeur",
+      "number": 19,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "joie",
+        "réussite",
+        "clarté",
+        "vitalité",
+        "amour partagé",
+        "reconnaissance"
+      ],
+      "reversed": [
+        "orgueil",
+        "surexposition",
+        "naïveté",
+        "confiance excessive",
+        "friction d’ego"
+      ]
+    },
+    {
+      "name": "Le Jugement",
+      "arcana": "majeur",
+      "number": 20,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "appel intérieur",
+        "réveil",
+        "seconde chance",
+        "libération",
+        "bilan",
+        "annonce"
+      ],
+      "reversed": [
+        "blocage du passé",
+        "auto‑jugement",
+        "retard d’officialisation",
+        "crainte de l’appel"
+      ]
+    },
+    {
+      "name": "Le Monde",
+      "arcana": "majeur",
+      "number": 21,
+      "suit": null,
+      "rank": null,
+      "upright": [
+        "accomplissement",
+        "ouverture",
+        "harmonie",
+        "voyage abouti",
+        "succès global",
+        "intégration"
+      ],
+      "reversed": [
+        "cycle inachevé",
+        "retard d’achèvement",
+        "périmètre trop étroit",
+        "perfectionnisme stérile"
+      ]
+    },
+    {
+      "name": "As de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "As",
+      "upright": [
+        "nouveau sentiment",
+        "ouverture du cœur",
+        "intuition",
+        "compassion",
+        "joie naissante",
+        "réceptivité"
+      ],
+      "reversed": [
+        "blocage émotionnel",
+        "cœur fermé",
+        "hypersensibilité",
+        "amour non réciproque",
+        "réserve"
+      ]
+    },
+    {
+      "name": "2 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "2",
+      "upright": [
+        "union",
+        "partenariat",
+        "attraction réciproque",
+        "harmonie",
+        "réconciliation"
+      ],
+      "reversed": [
+        "désaccord",
+        "rupture",
+        "déséquilibre dans l’échange",
+        "dépendance affective",
+        "mésentente"
+      ]
+    },
+    {
+      "name": "3 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "3",
+      "upright": [
+        "célébration",
+        "amitié",
+        "communauté",
+        "réseaux",
+        "créativité partagée"
+      ],
+      "reversed": [
+        "excès",
+        "potins",
+        "exclusion",
+        "sur‑socialisation",
+        "triangulation"
+      ]
+    },
+    {
+      "name": "4 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "4",
+      "upright": [
+        "apathie",
+        "satiété",
+        "ennui",
+        "introspection",
+        "offre ignorée"
+      ],
+      "reversed": [
+        "ré‑éveil",
+        "nouvelle curiosité",
+        "sortir de la torpeur",
+        "gratitude",
+        "réouverture"
+      ]
+    },
+    {
+      "name": "5 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "5",
+      "upright": [
+        "déception",
+        "deuil",
+        "regret",
+        "focus sur la perte",
+        "tristesse"
+      ],
+      "reversed": [
+        "acceptation",
+        "apprentissage",
+        "tourner la page",
+        "reconnaître ce qui reste",
+        "résilience"
+      ]
+    },
+    {
+      "name": "6 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "6",
+      "upright": [
+        "souvenirs",
+        "nostalgie",
+        "innocence",
+        "générosité",
+        "retour du passé"
+      ],
+      "reversed": [
+        "idéalisations",
+        "immaturité",
+        "attachement au passé",
+        "regrets tenaces",
+        "mélancolie"
+      ]
+    },
+    {
+      "name": "7 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "7",
+      "upright": [
+        "rêverie",
+        "options multiples",
+        "imagination",
+        "visualisation",
+        "désirs"
+      ],
+      "reversed": [
+        "illusion",
+        "confusion de choix",
+        "fuite",
+        "fantasmes stériles",
+        "sur‑promesses"
+      ]
+    },
+    {
+      "name": "8 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "8",
+      "upright": [
+        "départ nécessaire",
+        "quête de sens",
+        "laisser‑aller",
+        "retrait",
+        "maturité émotionnelle"
+      ],
+      "reversed": [
+        "retour en arrière",
+        "peur de quitter",
+        "attachement vide",
+        "errance sans cap"
+      ]
+    },
+    {
+      "name": "9 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "9",
+      "upright": [
+        "satisfaction",
+        "vœu exaucé",
+        "plaisir",
+        "gratitude",
+        "bien‑être"
+      ],
+      "reversed": [
+        "excès",
+        "autosatisfaction",
+        "désirs superficiels",
+        "insatisfaction cachée"
+      ]
+    },
+    {
+      "name": "10 de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "10",
+      "upright": [
+        "harmonie familiale",
+        "plénitude",
+        "joie partagée",
+        "paix",
+        "sentiment d’appartenance"
+      ],
+      "reversed": [
+        "discorde",
+        "tensions familiales",
+        "fausse façade",
+        "attentes irréalistes"
+      ]
+    },
+    {
+      "name": "Valet de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "Valet",
+      "upright": [
+        "message du cœur",
+        "sensibilité",
+        "apprentissage émotionnel",
+        "créativité tendre",
+        "innocence"
+      ],
+      "reversed": [
+        "immaturité",
+        "mauvaise gestion des émotions",
+        "naïveté",
+        "hypersensibilité"
+      ]
+    },
+    {
+      "name": "Cavalier de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "Cavalier",
+      "upright": [
+        "quête romantique",
+        "invitation",
+        "diplomatie",
+        "charme",
+        "art"
+      ],
+      "reversed": [
+        "inconstance",
+        "séduction creuse",
+        "promesses floues",
+        "volatilité émotionnelle"
+      ]
+    },
+    {
+      "name": "Reine de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "Reine",
+      "upright": [
+        "empathie",
+        "écoute",
+        "intuition stable",
+        "soin",
+        "compassion mature"
+      ],
+      "reversed": [
+        "hypersacrifice",
+        "émotivité débordante",
+        "dépendance",
+        "manipulation passive"
+      ]
+    },
+    {
+      "name": "Roi de Coupes",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Coupes",
+      "rank": "Roi",
+      "upright": [
+        "maîtrise émotionnelle",
+        "maturité affective",
+        "médiation",
+        "bienveillance",
+        "équilibre cœur‑esprit"
+      ],
+      "reversed": [
+        "refoulement",
+        "froid affectif",
+        "contrôle émotionnel",
+        "distance calculée"
+      ]
+    },
+    {
+      "name": "As de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "As",
+      "upright": [
+        "nouvelle ressource",
+        "opportunité matérielle",
+        "semence",
+        "stabilité potentielle",
+        "réalité concrète"
+      ],
+      "reversed": [
+        "occasion manquée",
+        "retard financier",
+        "doute sur la valeur",
+        "gaspillage",
+        "insécurité"
+      ]
+    },
+    {
+      "name": "2 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "2",
+      "upright": [
+        "équilibre des priorités",
+        "jonglage",
+        "souplesse",
+        "adaptation",
+        "flux financier"
+      ],
+      "reversed": [
+        "déséquilibre",
+        "surcharge",
+        "mauvaise gestion",
+        "instabilité",
+        "procrastination"
+      ]
+    },
+    {
+      "name": "3 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "3",
+      "upright": [
+        "travail d’équipe",
+        "compétence",
+        "artisanat",
+        "planification",
+        "reconnaissance professionnelle"
+      ],
+      "reversed": [
+        "désaccord d’équipe",
+        "amateurisme",
+        "manque de standards",
+        "retour à l’atelier"
+      ]
+    },
+    {
+      "name": "4 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "4",
+      "upright": [
+        "économie",
+        "sécurité",
+        "réserve",
+        "stabilité",
+        "prudence matérielle"
+      ],
+      "reversed": [
+        "avarice",
+        "crispation",
+        "peur de perdre",
+        "blocage des flux",
+        "possessivité"
+      ]
+    },
+    {
+      "name": "5 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "5",
+      "upright": [
+        "manque",
+        "chute de revenus",
+        "exclusion",
+        "période difficile",
+        "aide à demander"
+      ],
+      "reversed": [
+        "reprise progressive",
+        "solidarité",
+        "soutien trouvé",
+        "dépenses maîtrisées"
+      ]
+    },
+    {
+      "name": "6 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "6",
+      "upright": [
+        "don et réception",
+        "partage",
+        "aide",
+        "équité",
+        "générosité pragmatique"
+      ],
+      "reversed": [
+        "dépendance",
+        "charité intéressée",
+        "conditions cachées",
+        "inégalités"
+      ]
+    },
+    {
+      "name": "7 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "7",
+      "upright": [
+        "évaluation",
+        "patience",
+        "retour sur investissement",
+        "persévérance",
+        "ajustements"
+      ],
+      "reversed": [
+        "impatience",
+        "rendement décevant",
+        "mauvais placement",
+        "abandon prématuré"
+      ]
+    },
+    {
+      "name": "8 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "8",
+      "upright": [
+        "maîtrise",
+        "apprentissage appliqué",
+        "discipline",
+        "artisanat quotidien",
+        "amélioration continue"
+      ],
+      "reversed": [
+        "perfectionnisme stérile",
+        "routine vide",
+        "erreurs répétées",
+        "désengagement"
+      ]
+    },
+    {
+      "name": "9 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "9",
+      "upright": [
+        "indépendance",
+        "confort",
+        "autosuffisance",
+        "récompense",
+        "propriété"
+      ],
+      "reversed": [
+        "dépendance matérielle",
+        "vanité",
+        "dépenses d’image",
+        "solitude dorée"
+      ]
+    },
+    {
+      "name": "10 de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "10",
+      "upright": [
+        "patrimoine",
+        "stabilité durable",
+        "famille/entreprise",
+        "héritage",
+        "sécurité intergénérationnelle"
+      ],
+      "reversed": [
+        "conflits d’héritage",
+        "valeurs familiales en tension",
+        "priorités matérielles excessives"
+      ]
+    },
+    {
+      "name": "Valet de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "Valet",
+      "upright": [
+        "étudiant sérieux",
+        "curiosité concrète",
+        "offre d’emploi",
+        "réalisme",
+        "étude de marché"
+      ],
+      "reversed": [
+        "paresse",
+        "manque de méthode",
+        "opportunité négligée",
+        "mesquinerie"
+      ]
+    },
+    {
+      "name": "Cavalier de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "Cavalier",
+      "upright": [
+        "fiabilité",
+        "progression constante",
+        "persévérance",
+        "méthode",
+        "routine efficace"
+      ],
+      "reversed": [
+        "lenteur excessive",
+        "rigidité",
+        "ennui",
+        "inflexibilité"
+      ]
+    },
+    {
+      "name": "Reine de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "Reine",
+      "upright": [
+        "sens pratique",
+        "générosité concrète",
+        "gestion du foyer/projet",
+        "sécurité",
+        "bien‑être"
+      ],
+      "reversed": [
+        "sur‑contrôle",
+        "matérialisme",
+        "surcharge domestique",
+        "dévouement non reconnu"
+      ]
+    },
+    {
+      "name": "Roi de Deniers",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Deniers",
+      "rank": "Roi",
+      "upright": [
+        "stabilité financière",
+        "leadership économique",
+        "fiabilité",
+        "gestion",
+        "succès matériel"
+      ],
+      "reversed": [
+        "entêtement",
+        "avarice",
+        "rigidité hiérarchique",
+        "priorité au profit"
+      ]
+    },
+    {
+      "name": "As d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "As",
+      "upright": [
+        "clarité mentale",
+        "vérité",
+        "décision",
+        "idée brillante",
+        "couper l’illusion"
+      ],
+      "reversed": [
+        "confusion",
+        "doute",
+        "idées conflictuelles",
+        "communication tranchante",
+        "retard de décision"
+      ]
+    },
+    {
+      "name": "2 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "2",
+      "upright": [
+        "blocage",
+        "neutralité",
+        "trêve",
+        "choix différé",
+        "protection"
+      ],
+      "reversed": [
+        "décision forcée",
+        "déni",
+        "tensions",
+        "ouverture douloureuse"
+      ]
+    },
+    {
+      "name": "3 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "3",
+      "upright": [
+        "chagrin",
+        "blessure",
+        "vérité dure",
+        "séparation",
+        "désillusion"
+      ],
+      "reversed": [
+        "réparation",
+        "pardonner",
+        "guérison",
+        "prise de recul",
+        "communication réparatrice"
+      ]
+    },
+    {
+      "name": "4 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "4",
+      "upright": [
+        "repos",
+        "retrait",
+        "pause stratégique",
+        "guérison mentale",
+        "récupération"
+      ],
+      "reversed": [
+        "agitation",
+        "épuisement",
+        "retour prématuré",
+        "stress latent",
+        "insomnie"
+      ]
+    },
+    {
+      "name": "5 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "5",
+      "upright": [
+        "conflit",
+        "victoire amère",
+        "compétition",
+        "orgueil",
+        "tactiques douteuses"
+      ],
+      "reversed": [
+        "rédemption",
+        "éviter l’escalade",
+        "perdre pour gagner",
+        "réparer les ponts"
+      ]
+    },
+    {
+      "name": "6 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "6",
+      "upright": [
+        "transition",
+        "passage",
+        "voyage",
+        "prise de distance",
+        "apaisement"
+      ],
+      "reversed": [
+        "retour au problème",
+        "blocage",
+        "nostalgie paralysante",
+        "report de départ"
+      ]
+    },
+    {
+      "name": "7 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "7",
+      "upright": [
+        "stratégie",
+        "discrétion",
+        "indépendance",
+        "ingéniosité",
+        "plan B"
+      ],
+      "reversed": [
+        "auto‑duperie",
+        "mensonge",
+        "isolement risqué",
+        "exposition",
+        "procrastination"
+      ]
+    },
+    {
+      "name": "8 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "8",
+      "upright": [
+        "sentiment d’enfermement",
+        "peurs mentales",
+        "auto‑limitation",
+        "paralysie",
+        "anxiété"
+      ],
+      "reversed": [
+        "libération",
+        "nouvelle perspective",
+        "oser agir",
+        "défaire les nœuds mentaux"
+      ]
+    },
+    {
+      "name": "9 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "9",
+      "upright": [
+        "soucis",
+        "insomnies",
+        "culpabilité",
+        "angoisse",
+        "rumination"
+      ],
+      "reversed": [
+        "apaisement",
+        "demander de l’aide",
+        "réduire la charge",
+        "réalité moins grave"
+      ]
+    },
+    {
+      "name": "10 d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "10",
+      "upright": [
+        "fin radicale",
+        "épuisement",
+        "effondrement d’une idée",
+        "libération après la chute",
+        "point zéro"
+      ],
+      "reversed": [
+        "renaître",
+        "reprendre des forces",
+        "le pire est passé",
+        "reconstruction"
+      ]
+    },
+    {
+      "name": "Valet d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "Valet",
+      "upright": [
+        "curiosité mentale",
+        "veille",
+        "observation",
+        "apprentissage agile",
+        "idées neuves"
+      ],
+      "reversed": [
+        "commérage",
+        "imprudence verbale",
+        "nervosité",
+        "sursaut sans suite"
+      ]
+    },
+    {
+      "name": "Cavalier d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "Cavalier",
+      "upright": [
+        "action rapide",
+        "franchise",
+        "coup de théâtre",
+        "courage intellectuel",
+        "percée"
+      ],
+      "reversed": [
+        "impulsivité",
+        "agressivité verbale",
+        "précipitation",
+        "conflit"
+      ]
+    },
+    {
+      "name": "Reine d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "Reine",
+      "upright": [
+        "lucidité",
+        "indépendance",
+        "objectivité",
+        "bon jugement",
+        "frontière saine"
+      ],
+      "reversed": [
+        "froideur",
+        "sévérité",
+        "coupure relationnelle",
+        "exigence dure"
+      ]
+    },
+    {
+      "name": "Roi d’Épées",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Épées",
+      "rank": "Roi",
+      "upright": [
+        "raison",
+        "décision nette",
+        "stratégie",
+        "justice",
+        "maîtrise intellectuelle"
+      ],
+      "reversed": [
+        "rigidité mentale",
+        "autoritarisme",
+        "cynisme",
+        "rationalisation excessive"
+      ]
+    },
+    {
+      "name": "As de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "As",
+      "upright": [
+        "étincelle",
+        "initiative créative",
+        "énergie",
+        "enthousiasme",
+        "nouveau projet"
+      ],
+      "reversed": [
+        "blocage créatif",
+        "timidité d’action",
+        "occasions manquées",
+        "élan dispersé"
+      ]
+    },
+    {
+      "name": "2 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "2",
+      "upright": [
+        "planification",
+        "vision",
+        "choix de direction",
+        "prise de territoire",
+        "ambition"
+      ],
+      "reversed": [
+        "peur d’élargir",
+        "indécision stratégique",
+        "zone de confort",
+        "hésitation"
+      ]
+    },
+    {
+      "name": "3 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "3",
+      "upright": [
+        "expansion",
+        "attentes positives",
+        "logistique",
+        "opportunités au loin",
+        "momentum"
+      ],
+      "reversed": [
+        "retards",
+        "mauvaise anticipation",
+        "manque de soutien",
+        "attentes déçues"
+      ]
+    },
+    {
+      "name": "4 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "4",
+      "upright": [
+        "stabilité joyeuse",
+        "célébration",
+        "foyer/projet solide",
+        "communauté",
+        "jalons"
+      ],
+      "reversed": [
+        "retards de fête",
+        "instabilité domestique",
+        "fondations fragiles",
+        "annulation"
+      ]
+    },
+    {
+      "name": "5 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "5",
+      "upright": [
+        "compétition",
+        "émulation",
+        "tests",
+        "désordre créatif",
+        "apprentissage par le conflit"
+      ],
+      "reversed": [
+        "conflit stérile",
+        "éviter l’affrontement",
+        "fatigue de compétition",
+        "rivalités toxiques"
+      ]
+    },
+    {
+      "name": "6 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "6",
+      "upright": [
+        "victoire",
+        "reconnaissance",
+        "leadership",
+        "confiance",
+        "succès public"
+      ],
+      "reversed": [
+        "échec relatif",
+        "retard de reconnaissance",
+        "orgueil",
+        "doute"
+      ]
+    },
+    {
+      "name": "7 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "7",
+      "upright": [
+        "défense de position",
+        "assertivité",
+        "courage",
+        "tenue du cap",
+        "avantage acquis"
+      ],
+      "reversed": [
+        "usure",
+        "défense excessive",
+        "repli",
+        "position intenable"
+      ]
+    },
+    {
+      "name": "8 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "8",
+      "upright": [
+        "vitesse",
+        "nouvelles",
+        "accélération",
+        "synchronisation",
+        "voyage court"
+      ],
+      "reversed": [
+        "retards",
+        "messages manqués",
+        "précipitation confuse",
+        "manque de timing"
+      ]
+    },
+    {
+      "name": "9 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "9",
+      "upright": [
+        "résilience",
+        "derniers efforts",
+        "prudence",
+        "frontière",
+        "endurance"
+      ],
+      "reversed": [
+        "épuisement",
+        "paranoïa",
+        "ne plus y croire",
+        "défenses trop hautes"
+      ]
+    },
+    {
+      "name": "10 de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "10",
+      "upright": [
+        "charge lourde",
+        "responsabilités",
+        "fin de parcours",
+        "surcharge",
+        "devoir"
+      ],
+      "reversed": [
+        "burn‑out",
+        "déléguer",
+        "prioriser",
+        "dire non",
+        "soulagement nécessaire"
+      ]
+    },
+    {
+      "name": "Valet de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "Valet",
+      "upright": [
+        "curiosité créative",
+        "message motivant",
+        "esprit d’exploration",
+        "audace",
+        "démarrage"
+      ],
+      "reversed": [
+        "impulsivité",
+        "inconstance",
+        "caprices",
+        "annonces sans suite"
+      ]
+    },
+    {
+      "name": "Cavalier de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "Cavalier",
+      "upright": [
+        "aventure",
+        "audace",
+        "voyage",
+        "énergie magnétique",
+        "changement rapide"
+      ],
+      "reversed": [
+        "instabilité",
+        "inconstance",
+        "colère brève",
+        "fuite en avant"
+      ]
+    },
+    {
+      "name": "Reine de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "Reine",
+      "upright": [
+        "charisme",
+        "créativité sûre d’elle",
+        "magnétisme",
+        "chaleur",
+        "leadership inspirant"
+      ],
+      "reversed": [
+        "jalousie",
+        "autorité chaude",
+        "contrôle de l’image",
+        "susceptibilité"
+      ]
+    },
+    {
+      "name": "Roi de Bâtons",
+      "arcana": "mineur",
+      "number": null,
+      "suit": "Bâtons",
+      "rank": "Roi",
+      "upright": [
+        "vision entrepreneuriale",
+        "autorité créative",
+        "influence",
+        "courage stratégique",
+        "initiative"
+      ],
+      "reversed": [
+        "domination",
+        "autorité autoréférentielle",
+        "intolérance",
+        "risques mal calculés"
+      ]
+    }
+  ]
+}

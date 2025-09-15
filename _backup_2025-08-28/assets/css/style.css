@@ -1,0 +1,430 @@
+/* =========================================================
+   L’œil d’Opanoma – style de base cosy (version optimisée)
+   ========================================================= */
+
+/* === Variables === */
+:root{
+  --bg:#f8f5f2;
+  --card:#fff8f5;
+  --ink:#2b2220;
+  --muted:#7d6c66;
+  --accent:#a34d57;
+  --line:#ead6cf;
+  --radius:18px;
+  --shadow:0 10px 24px rgba(91,45,50,.08);
+}
+
+/* === Reset & base === */
+*{ box-sizing:border-box }
+html,body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,system-ui,Arial;
+  line-height:1.6;
+}
+h1,h2,h3,.brand a{ font-family:Fraunces,Georgia,serif }
+a{ color:inherit; text-decoration:none }
+img{ max-width:100%; height:auto; display:block }
+.container{ width:min(1120px,92%); margin:0 auto }
+
+/* Accessibilité (focus) */
+:focus-visible{
+  outline:3px solid color-mix(in lch, var(--accent), white 20%);
+  outline-offset:3px;
+  border-radius:10px;
+}
+
+/* Réduit les animations si l’utilisateur le demande */
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition:none !important; scroll-behavior:auto !important; }
+}
+
+/* === Layout header / nav === */
+header{
+  position:sticky; top:0; z-index:3;
+  backdrop-filter:saturate(180%) blur(8px);
+  background:rgba(248,245,242,.85);
+  border-bottom:1px solid var(--line);
+}
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:12px 0 }
+.brand{ display:flex; align-items:center; gap:10px; font-weight:700 }
+.main-nav{ margin-left:auto; display:flex; gap:16px }
+nav ul{ list-style:none; display:flex; gap:18px; margin:0; padding:0 }
+
+.btn{
+  display:inline-flex; align-items:center; gap:.5rem;
+  border-radius:14px; padding:10px 16px; font-weight:600;
+  border:1px solid var(--line); background:var(--card); box-shadow:var(--shadow);
+  transition:transform .08s ease;
+}
+.btn:hover{ transform:translateY(-1px) }
+.btn-primary{ background:var(--accent); color:#fff; border-color:#8f3e46 }
+
+/* === Background media === */
+#bg-video{
+  position:fixed; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-1; opacity:1; pointer-events:none;
+}
+
+/* === Hero === */
+.hero{ position:relative; padding:56px 0 24px; z-index:1 }
+.pill{
+  display:inline-block; font-size:13px; color:#2b2020;
+  background:#fdecef; border:1px solid #f5d7dd;
+  padding:6px 10px; border-radius:999px; margin-bottom:10px
+}
+h1{ font-size:clamp(28px,4vw,44px); line-height:1.15; margin:0 0 12px }
+.lead{ font-size:clamp(16px,1.9vw,20px); color:var(--muted); margin:0 0 16px }
+.brandmark{ position:absolute; top:14px; left:14px; width:min(120px,22vw); opacity:.95 }
+
+/* === Sections & cartes === */
+section{ padding:56px 0; position:relative; z-index:1 }
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-gap:20px;       /* fallback */
+  gap:20px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+.price{ font-weight:800; font-size:22px }
+
+/* === Patch anti-fond abricot / fond image === */
+html{ background:transparent } /* Laisse le body gérer le fond */
+body{
+  background-color:#fff; /* fallback si l’image ne charge pas */
+  background-image:url('/assets/img/hero/01.png?v=20250813-1');
+  background-size:cover;
+  background-position:center;
+  min-height:100vh;
+}
+
+/* Ajustements header */
+header .brand{ display:flex; align-items:center; gap:8px }
+header .main-nav{ margin-left:auto }
+
+/* =========================================================
+   TAROT – Grilles, cartes, dos, galerie, tirage IA
+   ========================================================= */
+
+/* Bloc tirage sous “Avis” */
+#tirage{ padding-top:0 }
+#tirage .tarot-card{
+  margin-top:24px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+#tirage .card__head{ margin-bottom:12px }
+#tirage .card__head h2{ margin:0 0 4px }
+
+/* Cadre bleu foncé translucide (faces + dos) */
+#galerie .tarot-gallery,
+#dos .tarot-backs{
+  background: rgba(10,30,60,.65);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  padding: 20px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+/* Grille compacte des dos */
+#dos .tarot-backs .tg-grid{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fill,110px) !important;
+  justify-content:center !important;
+  gap:8px !important;
+}
+
+/* Tuiles strictes 21:32 */
+#galerie figure, #dos figure{ margin:0; padding:0; border:0; background:transparent }
+
+#galerie .tile, #dos .tile{
+  position:relative;
+  width:110px;
+  aspect-ratio:21/32;
+  border-radius:8px;
+  overflow:hidden;
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+#galerie .tile > img, #dos .tile > img{
+  width:100%; height:100%;
+  object-fit:cover; display:block;
+}
+#galerie .tile:hover, #dos .tile:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 22px rgba(0,0,0,.08);
+}
+
+/* Sélection & verrouillage */
+#dos .tile.selected{
+  outline:3px solid var(--accent);
+  box-shadow:0 0 0 4px rgba(163,77,87,.20);
+  position:relative;
+}
+#dos .tile.selected::after{
+  content:"✓";
+  position:absolute; top:6px; right:6px;
+  width:24px; height:24px; display:grid; place-items:center;
+  font-weight:800; color:#fff; background:var(--accent);
+  border-radius:999px; box-shadow:0 2px 8px rgba(0,0,0,.2);
+  pointer-events:none;
+}
+#dos .tile.disabled{
+  filter:grayscale(.25) saturate(.6);
+  opacity:.55;
+  transform:none !important;
+  box-shadow:none !important;
+  cursor:not-allowed;
+}
+
+/* Flip 3D (dos→face) */
+.tile.flip3d{ perspective:800px }
+.flip3d-inner{
+  position:relative; width:100%; height:100%;
+  transform-style:preserve-3d;
+  transition:transform .5s ease;
+}
+.flip3d-inner.is-flipped{ transform:rotateY(180deg) }
+.flip3d .face{
+  position:absolute; inset:0;
+  width:100%; height:100%; display:block; object-fit:cover;
+  backface-visibility:hidden;
+}
+.flip3d .face.front{ transform:rotateY(180deg) }
+
+/* Nettoyage UI interne du widget */
+#tarot-app #controls h2{ margin:.2rem 0 .6rem }
+/* #tarot-app #controls h2{ display:none } */
+
+/* Bandeau tirage compact */
+#tarot-app .draw-strip{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr)) !important;
+  gap:8px !important;
+  margin:8px 0 12px !important;
+  padding:0 !important;
+}
+#tarot-app .draw-strip li{
+  list-style:none;
+  display:flex; align-items:center; gap:.75rem;
+  padding:.6rem; border:1px solid #eee; border-radius:10px; background:#fffaf8;
+}
+#tarot-app .draw-strip img{
+  width:110px !important;
+  height:auto !important;
+  border-radius:8px !important;
+  display:block !important;
+}
+
+/* Masque la barre “compteur / reset” si elle existe */
+#dos .deck-toolbar,
+#dos #dos-count,
+#dos #dos-reset{ display:none !important }
+
+/* Titre/intro bloc des dos (héros) */
+#dos .tg-hero{
+  text-align:center;
+  margin:0 0 12px;
+  padding:6px 0;
+}
+
+#dos .tg-sub{
+  margin:6px 0 0;
+  font-family:Inter, system-ui, Arial, sans-serif;
+  font-weight:500;
+  font-size:clamp(14px,2vw,16px);
+  color:#fff; opacity:.95;
+}
+
+/* === Bloc IA (résumé) === */
+#tirage .ai-box{
+  margin:14px 0 18px;
+  padding:14px 16px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(6px) saturate(140%);
+  -webkit-backdrop-filter:blur(6px) saturate(140%);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+#tirage .ai-head{ display:flex; align-items:center; gap:8px; font-weight:600; color:var(--ink); margin:0 0 6px }
+#tirage .ai-spinner{
+  width:14px; height:14px; border-radius:50%;
+  border:2px solid transparent; border-top-color:var(--accent); border-right-color:var(--accent);
+  animation: ai-spin .8s linear infinite;
+}
+@keyframes ai-spin{ to { transform:rotate(360deg) } }
+#tirage #ai-status{ font-size:.92em; color:var(--muted) }
+#tirage #ai-text{ margin-top:.4rem; white-space:pre-wrap; color:var(--ink); line-height:1.6 }
+#tirage #ai-text p{ margin:.5rem 0 }
+#tirage #ai-text ul{ margin:.4rem 0 .6rem 1.1rem; padding:0 }
+#tirage #ai-text li{ margin:.2rem 0 }
+
+/* === Responsive === */
+@media (max-width:980px){
+  .cards{ grid-template-columns:repeat(2,1fr) }
+}
+@media (max-width:640px){
+  .cards{ grid-template-columns:1fr }
+}
+@media (max-width:520px){
+  #tarot-app .draw-strip{ grid-template-columns:1fr !important }
+}
+@media (max-width:480px){
+  #galerie .tarot-gallery .tg-grid,
+  #dos .tarot-backs .tg-grid{ grid-template-columns:repeat(auto-fill,96px) }
+  #galerie .tile, #dos .tile{ width:96px }
+}
+
+/* --- Contrôles au-dessus du deck (dans #dos) --- */
+#dos .dos-controls{
+  margin:8px auto 14px;
+  max-width:840px;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(6px) saturate(140%);
+  -webkit-backdrop-filter:blur(6px) saturate(140%);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:14px 16px;
+}
+#dos .dos-controls #controls{ margin:0 }
+#dos .dos-controls #controls > div{
+  display:flex; gap:.8rem; flex-wrap:wrap; margin:.4rem 0;
+}
+#dos .dos-controls #q{
+  width:100%; padding:.6rem; margin:0 0 .4rem;
+  border:1px solid #ccc; border-radius:8px;
+}
+#dos .dos-controls #draw{
+  padding:.6rem 1rem; border:1px solid #ccc; border-radius:8px; cursor:pointer;
+  background:var(--card);
+}
+
+/* Bouton "Tirer et synthétiser" sous la grille */
+#dos .dos-actions{
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+#dos .dos-actions #draw{
+  padding: .8rem 1.25rem;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 10px;
+  background: rgba(255,255,255,.92);
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+
+/* confort mobile : bouton large */
+@media (max-width: 560px){
+  #dos .dos-actions #draw{
+    width: 100%;
+    max-width: 520px;
+  }
+}
+
+/* Label "Question :" au-dessus du champ */
+#dos .dos-controls label[for="q"],
+#dos .dos-controls > label {
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(20px, 2vw, 22px);
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,.35);
+  margin: .2rem 0 .6rem;
+  display: block;
+}
+
+/* Force la typo "Avis (Etsy)" sur le label de la question */
+#dos #controls > label:first-of-type{
+  font-family: Fraunces, Georgia, serif !important;
+  font-weight: 800 !important;
+  font-size: clamp(20px, 2vw, 22px) !important;
+  color: #fff !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,.35);
+  margin: .2rem 0 .6rem !important;
+  display: block;
+}
+
+#dos .dos-result{ margin-top:18px; padding-top:4px; }
+#dos .drawn-strip{
+  display:flex; justify-content:center; gap:16px; flex-wrap:wrap;
+  list-style:none; margin:0; padding:0;
+}
+#dos .drawn-strip li{
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius:12px; padding:8px; box-shadow:var(--shadow);
+}
+#dos .drawn-strip img{ width:160px; height:auto; border-radius:8px; display:block; }
+
+/* ===== HERO "TIRAGE IA" — clean ===== */
+#dos .tg-hero{
+  text-align:center;
+  margin:0 0 12px;
+  padding:6px 0;
+}
+
+#dos .tg-title{
+  /* c'est un <h2> donc il hérite déjà de Fraunces/gras comme "Avis" */
+  margin:0;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  text-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+
+#dos .tg-sub{
+  margin:6px 0 0;
+  font:500 14px/1.4 Inter, system-ui, Arial;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  opacity:.95;
+}
+
+/* --- Flip 3D : compat & priorité --- */
+#dos .tile.flip3d{ perspective:800px; -webkit-perspective:800px; }
+#dos .flip3d-inner{
+  transform-style:preserve-3d !important;
+  -webkit-transform-style:preserve-3d !important;
+  transition:transform .5s ease;
+}
+#dos .flip3d-inner.is-flipped{
+  transform:rotateY(180deg) !important;
+  -webkit-transform:rotateY(180deg) !important;
+}
+#dos .flip3d .face{
+  backface-visibility:hidden !important;
+  -webkit-backface-visibility:hidden !important;
+}
+#dos .flip3d .face.front{
+  transform:rotateY(180deg) !important;
+  -webkit-transform:rotateY(180deg) !important;
+}
+
+
+
+
+
+
+
+
+
+

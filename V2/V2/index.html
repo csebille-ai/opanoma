@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>l’Œil d’Opanoma</title>
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+  :root{
+    --beige:#f6efe8; --ink:#1f1a1a; --line:rgba(0,0,0,.08);
+    --accent:#a34d57; --shadow:0 12px 40px rgba(0,0,0,.08);
+    --container:1100px;
+  }
+  *{ box-sizing:border-box }
+  html,body{ margin:0; padding:0 }
+  html { scroll-behavior: smooth; }
+  body{ font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--beige) }
+
+  /* ===== Topbar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:1000;
+    background:rgba(246,239,232,.85);
+    -webkit-backdrop-filter:saturate(1.1) blur(8px);
+    backdrop-filter:saturate(1.1) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar__row{
+    max-width:var(--container); margin:0 auto; padding:14px 24px;
+    display:grid; align-items:center; gap:16px;
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .brand{display:inline-flex; align-items:center; gap:10px; font-weight:800}
+  .brand img{height:30px; width:auto; display:block; border-radius:6px}
+  .brand__name{letter-spacing:.2px; white-space:nowrap}
+  .nav{display:flex; align-items:center; gap:12px; justify-self:center}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:9px 14px; border-radius:999px; font-weight:600;
+    background:#fff; color:var(--ink);
+    border:1px solid rgba(0,0,0,.12); box-shadow:var(--shadow);
+    text-decoration:none; transition:transform .12s ease; white-space:nowrap;
+  }
+  .btn:hover{ transform:translateY(-1px) }
+  .nav__week{ margin-left:18px }
+  .socials{justify-self:end; display:flex; align-items:center; gap:10px}
+  .icon{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; color:#111; text-decoration:none; border-radius:8px; transition:transform .12s ease; }
+  .icon:hover{ transform:translateY(-1px) }
+  .icon svg{ filter: invert(1) drop-shadow(0 0 1px rgba(0,0,0,.55)); opacity:.95 }
+  @media (max-width:720px){
+    .topbar__row{ grid-template-columns:1fr auto }
+    .socials{ display:none }
+    .nav__week{ margin-left:8px }
+    .brand__name{ font-size:14px }
+  }
+  
+    /* curseur qui clignote pendant la frappe */
+#reading-output.typing::after {
+  content: "▍";
+  margin-left: 2px;
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+  
+  /* Images des cartes tirées (bande du bas) */
+#api-picks .result-card-inner img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* montre toute l’image sans rognage */
+  display: block;      /* enlève l’espace baseline */
+}
+
+  /* Boutons tirage désactivés */
+#tirage-ia .modes .mode[disabled]{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
+.interpret-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  justify-content: flex-end; /* boutons à droite */
+}
+
+.interpret-actions .btn.mode {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 14px;
+  border-radius:999px;
+  font-weight:600;
+  background:#fff;
+  color:var(--ink);
+  border:1px solid rgba(0,0,0,.12);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:transform .12s ease;
+}
+
+.interpret-actions .btn.mode:hover {
+  transform:translateY(-1px);
+}
+
+.interpret-actions .btn.mode:active {
+  transform:translateY(0);
+}
+
+
+/* Boutons thèmes (même style que boutons tirage) */
+#tirage-ia .themes .theme {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 14px;
+  border-radius:999px;
+  font-weight:600;
+  background:#fff;
+  color:var(--ink);
+  border:1px solid rgba(0,0,0,.12);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition: transform .12s ease;
+}
+#tirage-ia .themes .theme:hover {
+  transform: translateY(-1px);
+}
+#tirage-ia .themes .theme.active {
+  background: var(--accent);
+  color:#fff;
+  border-color:transparent;
+}
+#tirage-ia .themes .theme:focus-visible {
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+
+/* Petit shake visuel pour attirer l’œil sur les thèmes */
+@keyframes tarot-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+.themes.shake { animation: tarot-shake .4s linear 1; }
+
+  
+  /* Boutons de tirage */
+#tirage-ia .modes{ display:flex; flex-wrap:wrap; gap:8px; }
+#tirage-ia .modes .mode{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:9px 14px; border-radius:999px; font-weight:600;
+  background:#fff; color:var(--ink);
+  border:1px solid rgba(0,0,0,.12); box-shadow:var(--shadow);
+  cursor:pointer;
+}
+#tirage-ia .modes .mode.active{
+  background: var(--accent); color:#fff; border-color:transparent;
+}
+#tirage-ia .modes .mode:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+/* verrou visuel quand pas prêt */
+#tarot-grid.disabled{ pointer-events:none; opacity:.55; }
+
+  
+  #tarot-grid .tarot-card .flip {
+  aspect-ratio: 2 / 3;   /* structure */
+  min-height: 140px;     /* garde la carte visible même si l'image tarde */
+  display: block;
+}
+#tarot-grid .tarot-card { width: 100%; }
+#tarot-grid .tarot-card .side img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+  
+  /* ===== Tarot: grille + cartes ===== */
+#tarot-grid.grid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(auto-fill, minmax(90px,1fr));
+}
+
+.tarot-card{
+  position:relative;
+  border:0; padding:0; background:none;
+  cursor:pointer;
+  perspective:800px;
+}
+.tarot-card .flip{
+  position:relative;
+  width:100%;
+  aspect-ratio:2/3;           /* donne la hauteur → indispensable */
+  transform-style:preserve-3d;
+  transition:transform .5s ease;
+}
+.tarot-card[data-flipped="1"] .flip{ transform:rotateY(180deg); }
+
+.tarot-card .side{
+  position:absolute; inset:0;
+  backface-visibility:hidden;
+  border-radius:10px; overflow:hidden;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:var(--shadow);
+  background:#fff;
+}
+.tarot-card .side.front{ transform:rotateY(180deg); }
+.tarot-card .side img{
+  width:100%; height:100%; object-fit:contain; display:block;
+}
+
+
+.chosen-theme { font-weight:600; margin-bottom:6px; }
+.q-tools { display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
+
+
+/* Bande des résultats */
+#api-picks{
+  display:flex; justify-content:center; align-items:flex-start;
+  gap:12px; margin-top:16px; overflow-x:auto; padding-bottom:4px; width:100%;
+}
+#api-picks .result-card{ flex:0 0 var(--pick-w,96px); width:var(--pick-w,96px); }
+#api-picks .result-card-inner{
+  width:100%; aspect-ratio:2/3; overflow:hidden; border-radius:10px;
+  border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow); background:#fff;
+}
+#api-picks .pick-tag{ margin-bottom:6px; text-align:center; font:700 12px/1.2 Inter,system-ui,sans-serif; color:var(--accent); }
+#api-picks .pick-kw{ margin-top:6px; text-align:center; font-weight:700; font-size:11px; line-height:1.25; color:#6b5f5a; }
+#api-picks .pick-kw span{ display:block; }
+
+
+  /* ===== Titre de la modale + aide ===== */
+  .modal__titlewrap{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .modal__hint{
+    font:600 13px/1.3 Inter,system-ui,sans-serif;
+    color:#6b5f5a;
+    white-space:nowrap;
+  }
+  @media (max-width:640px){
+    .modal__hint{ white-space:normal }
+  }
+
+  /* Optionnel mais utile pour le wrapping */
+  #interp-text {
+    white-space: pre-wrap;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  /* ===== Loader & zone d'interprétation ===== */
+  #reading-output{ 
+    position: relative;
+    min-height: 64px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    max-height: clamp(240px, 55vh, 600px);
+    overflow-y: auto;
+    padding-right: 4px; /* évite l'effet cache sous la scrollbar */
+  }
+  #reading-output.loading{ opacity:.8 }
+  #reading-output .loader{
+    display:flex; align-items:center; gap:10px;
+    padding:10px 12px; border-radius:12px; background:#fff;
+    border:1px solid rgba(0,0,0,.06); box-shadow:var(--shadow);
+  }
+  #reading-output .spinner{
+    width:18px; height:18px; border-radius:50%;
+    border:3px solid rgba(163,77,87,.25);
+    border-top-color: var(--accent);
+    animation: tarot-spin .9s linear infinite;
+  }
+  @keyframes tarot-spin { to { transform: rotate(360deg); } }
+
+  /* ===== Cal.com ===== */
+  #calframe { width:100%; min-height:650px; border:0; border-radius:12px; }
+  #reserver { display:none; }
+  :target { scroll-margin-top: 80px; } /* si header sticky */
+
+  /* adapte les sélecteurs à ta structure */
+  .site-header .brand a,
+  .site-header .brand a:visited {
+    color: var(--ink, #1f1a1a) !important;
+    text-decoration: none;
+  }
+  .site-header .brand a:hover { color: var(--accent, #a34d57); }
+
+  /* mêmes règles que Offres/Tarifs, Avis, Réserver */
+  .card-section {
+    background: var(--beige, #f6efe8);
+    padding: 40px 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow, 0 10px 30px rgba(0,0,0,.08));
+    margin: 40px auto;
+    max-width: 960px;
+    text-align: center;
+  }
+
+  .card-section h2 {
+    font-family: "Fraunces", serif;
+    font-size: 1.8rem;
+    margin-bottom: 0.5em;
+    color: var(--ink, #1f1a1a);
+  }
+
+  .card-section p {
+    margin-bottom: 1.5em;
+    color: #444;
+  }
+
+  /* Offres cliquables */
+  .card[data-cal] { cursor:pointer; }
+  .card[data-cal]:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative; min-height:62vh;
+    display:grid; place-items:center; text-align:left; overflow:hidden;
+    border-bottom:1px solid rgba(0,0,0,.08);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(246,239,232,0), rgba(246,239,232,.6) 60%, var(--beige) 100%);
+    pointer-events:none;
+  }
+  .hero .bg{ position:absolute; inset:0; background-size:cover; background-position:center; filter:saturate(1.05) contrast(1.02) }
+  .hero .card{
+    position:relative; z-index:1; background:rgba(255,255,255,.82); backdrop-filter:blur(8px);
+    border:1px solid rgba(0,0,0,.06); border-radius:24px; padding:28px; box-shadow:var(--shadow); max-width:560px;
+  }
+  .tag{ display:inline-block; font-size:12px; padding:4px 10px; border-radius:999px; background:#fff; border:1px solid rgba(0,0,0,.08) }
+  .mega{ font-weight:800; line-height:1.15; font-size:clamp(32px,5vw,48px); margin:0 0 8px }
+  .sub{ margin:0 0 16px; color:#4b403d }
+  .hero .grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  @media (max-width:560px){ .hero .card{ padding:20px; border-radius:18px } }
+
+  /* ===== Sections génériques ===== */
+  .wrap{ max-width:var(--container); margin:0 auto; padding:24px }
+  .grid-3{ display:grid; gap:16px; grid-template-columns:repeat(3, 1fr) }
+  @media (max-width:900px){ .grid-3{ grid-template-columns:repeat(2,1fr) } }
+  @media (max-width:600px){ .grid-3{ grid-template-columns:1fr } }
+
+  .card{
+    background:#fff; border:1px solid rgba(0,0,0,.06);
+    border-radius:16px; padding:16px; box-shadow:var(--shadow);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    cursor:pointer;
+  }
+  @media (hover:hover){
+    .card:hover{
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 16px 50px rgba(163,77,87,0.25);
+      border-color: var(--accent);
+    }
+  }
+  .card:active{
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 6px 20px rgba(163,77,87,0.2);
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.95);
+  }
+
+  
+  #newsletter { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+  .ml-embedded form { background: transparent !important; }
+
+  /* ===== Newsletter ===== */
+  #newsletter .card{ display:grid; grid-template-columns: 120px 1fr; gap:16px; align-items:center; }
+  #newsletter .thumb{ width:100%; aspect-ratio:1/1; border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,.06); box-shadow:var(--shadow); background:#fff; }
+  #newsletter .thumb img{ width:100%; height:100%; object-fit:cover; }
+  @media (max-width:640px){ #newsletter .card{ grid-template-columns:1fr } }
+  </style>
+
+  <!-- Styles MailerLite -->
+  <style type="text/css">@import url("https://assets.mlcdn.com/fonts.css?version=1755079");</style>
+  <style type="text/css">
+    /* LOADER */
+    .ml-form-embedSubmitLoad {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+    }
+
+    .g-recaptcha {
+      transform: scale(1);
+      -webkit-transform: scale(1);
+      transform-origin: 0 0;
+      -webkit-transform-origin: 0 0;
+     
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    .ml-form-embedSubmitLoad:after {
+      content: " ";
+      display: block;
+      width: 11px;
+      height: 11px;
+      margin: 1px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      border-color: #ffffff #ffffff #ffffff transparent;
+      animation: ml-form-embedSubmitLoad 1.2s linear infinite;
+    }
+    @keyframes ml-form-embedSubmitLoad { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+   
+   
+    
+   
+
+
+    
+/* ===== POPUP SOLID ===== */
+.modal{position:fixed; inset:0; z-index:2000; display:none;}
+.modal[open]{display:grid; place-items:center;}
+
+.modal__overlay{position:absolute; inset:0; background:rgba(0,0,0,.45); backdrop-filter:blur(2px);}
+
+.modal__panel{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  width:min(96vw,1100px);
+  height:min(92vh, 900px);   /* ✅ hauteur explicite (pas seulement max-height) */
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.25);
+  background:var(--beige,#f6efe8);
+  overflow:hidden;            /* on confine le scroll à .modal__content */
+}
+
+.modal__head{
+  flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:12px 16px; border-bottom:1px solid var(--line,rgba(0,0,0,.08)); background:#fff7;
+}
+
+.modal__content{
+  flex:1 1 auto;
+  min-height:0;              /* ✅ clé pour que le scroll fonctionne en flex */
+  overflow:auto;              /* ✅ le contenu scrolle ici */
+  padding:16px;
+  display:block !important;   /* force tout override exotique */
+}
+
+
+/* Ligne thèmes + question */
+.themes-row {
+  display: grid;
+  grid-template-columns: auto 1fr; /* colonne gauche (thèmes + modes) | colonne droite (question) */
+  column-gap: 16px;
+  align-items: start;
+}
+
+/* Placements dans la grille */
+.themes         { grid-column: 1; grid-row: 1; }
+.modes          { grid-column: 1; grid-row: 2; margin-top: 8px; }
+#theme-question { grid-column: 2; grid-row: 1 / span 2; min-width: 260px; }
+
+/* Styles boutons */
+.themes .theme,
+.modes .mode {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 14px;
+  line-height: 1.2;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background: #f8f8f8;
+  cursor: pointer;
+}
+
+/* Boutons thèmes sur une seule ligne (wrap si écran petit) */
+.themes { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Outils question */
+.q-tools { display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
+.chosen-theme { font-weight:600; margin-bottom:6px; }
+
+
+/* Les boutons thème restent flex et wrap */
+#tirage-ia .themes{
+  display:flex; flex-wrap:wrap; gap:8px;
+}
+
+/* La question en inline (label + champ sur la même ligne) */
+#tirage-ia #theme-question[hidden]{ display:none !important; }
+#tirage-ia #theme-question{ background:#fff; border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow);
+  border-radius:12px; padding:10px; }
+#tirage-ia #theme-question .q-inline{
+  display:flex; align-items:center; gap:8px;
+}
+#tirage-ia #theme-question .q-label{
+  font:600 12px/1.2 Inter,system-ui,sans-serif; color:#6b5f5a; white-space:nowrap;
+}
+#tirage-ia #theme-question textarea{
+  flex:1; width:100%; min-height:38px; resize:vertical; padding:8px 10px;
+  border:1px solid rgba(0,0,0,.12); border-radius:8px; background:#fff;
+}
+#tirage-ia #theme-question .q-tools{
+  display:flex; justify-content:space-between; align-items:center; margin-top:6px;
+}
+
+/* Responsive : pile sur mobile */
+@media (max-width: 800px){
+  #tirage-ia .themes-row{ grid-template-columns: 1fr; }
+}
+
+
+    
+  </style>
+  
+  
+  
+</head>
+
+<body>
+
+  <!-- ===== Bandeau ===== -->
+  <header class="topbar">
+    <div class="topbar__row">
+      <a class="brand" href="/" aria-label="Accueil – l’Œil d’Opanoma">
+        <img src="/assets/img/hero/logo-opanoma.png" alt="Logo l’Œil d’Opanoma">
+        <span class="brand__name">l’Œil d’Opanoma</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a class="btn" href="#choisir">Choisir</a>
+        <a class="btn" href="#reserver">Réserver</a>
+        <a class="btn nav__week" href="#newsletter">Carte de la semaine</a>
+      </nav>
+      <div class="socials" aria-label="Réseaux sociaux">
+        <a class="icon" href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+          </svg>
+        </a>
+        <a class="icon" href="https://www.etsy.com/fr/shop/Loeildopanoma" target="_blank" rel="noopener" aria-label="Etsy">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 7h8v2H10v3h5v2h-5v3h6v2H8V7Z" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="bg" style="background-image:url('/assets/img/hero/01.png'), linear-gradient(120deg,#e8d8cf,#f6efe8);"></div>
+    <div class="hero-center">
+      <div class="card">
+        <p class="tag">Expérience IA</p>
+        <h1 class="mega">Amusez-vous à découvrir les cartes grâce à l’IA&nbsp;!</h1>
+        <p class="sub">Le tirage par l’IA doit être considéré comme un jeu.</p>
+        <div class="grid">
+          <a class="btn" href="#" data-open-modal="tirage-modal">Un tirage&nbsp;?</a>
+          <a class="btn" href="#choisir">La vraie Guidance, c'est là&nbsp;!</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Offres ===== -->
+  <section class="wrap" id="choisir">
+    <h2 class="section-title">Offres &amp; tarifs</h2>
+    <div class="grid-3">
+      <div class="card" data-cal="question-unique-15min">
+        <h3>Question Unique</h3>
+        <p class="price">15&nbsp;€</p>
+        <ul class="meta">
+          <li>Réponse rapide (– de 15&nbsp;min)</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +5&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="guidance-30min">
+        <h3>Guidance 30 min</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Clarification + tirage</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +5&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="guidance-60min">
+        <h3>Guidance 60 min</h3>
+        <p class="price">60&nbsp;€ <small>(60&nbsp;min)</small></p>
+        <ul class="meta">
+          <li>Exploration approfondie</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +10&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="soin-energetique-60min">
+        <h3>Soin énergétique (présentiel)</h3>
+        <p class="price">60&nbsp;€ <small>(60&nbsp;min)</small></p>
+        <ul class="meta">
+          <li>À domicile (zone à préciser)</li>
+          <li>Rendez-vous sur demande</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="pendule-distance-30min">
+        <h3>Pendule à distance</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Énergétique à distance</li>
+          <li>Compte-rendu bref</li>
+          <li>Livraison sous 24&nbsp;h</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="deblocage-pendule-30min">
+        <h3>Déblocage (pendule)</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Travail ciblé</li>
+          <li>À distance</li>
+          <li>Livraison sous 24&nbsp;h</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Avis ===== -->
+  <section class="wrap" id="avis" aria-labelledby="avis-title">
+    <h2 id="avis-title" class="section-title">Avis sur Opanoma</h2>
+    <div class="grid-3">
+      <div class="card">
+        <p style="margin:0 0 8px">✨ “J’ai adoré mon tirage, il est tombé pile quand j’en avais besoin !”</p>
+        <p style="margin:0;font-weight:600">C. 36 ans</p>
+        <a href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Instagram</a>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 8px">🔮 “Commande parfaite et guidance très douce, merci infiniment.”</p>
+        <p style="margin:0;font-weight:600">M. 51 ans</p>
+        <a href="https://www.etsy.com/fr/shop/Loeildopanoma#reviews" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Etsy</a>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 8px">🌙 “Chaque guidance m’apporte une clarté nouvelle et une énergie positive.”</p>
+        <p style="margin:0;font-weight:600">J. 21 ans</p>
+        <a href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Réserver ===== -->
+  <section class="wrap" id="reserver" aria-labelledby="reserver-title">
+    <h2 id="reserver-title" class="section-title">Réserver</h2>
+    <div class="card">
+      <div class="embed-wrap">
+        <iframe id="calframe" src="about:blank" title="Réservation — l’Œil d’Opanoma" loading="lazy" allow="microphone; camera"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Script Cal.com ===== -->
+  <script>
+  (function(){
+    const CAL_MAP = {
+      'question-unique-15min'  : 'https://cal.com/christophe-sebille-yps3zm/question-unique-15min',
+      'guidance-30min'         : 'https://cal.com/christophe-sebille-yps3zm/guidance-30',
+      'guidance-60min'         : 'https://cal.com/christophe-sebille-yps3zm/guidance-60',
+      'soin-energetique-60min' : 'https://cal.com/christophe-sebille-yps3zm/soin-energetique',
+      'pendule-distance-30min' : 'https://cal.com/christophe-sebille-yps3zm/pendule',
+      'deblocage-pendule-30min': 'https://cal.com/christophe-sebille-yps3zm/deblocage',
+    };
+    const frame    = document.getElementById('calframe');
+    const reserver = document.getElementById('reserver');
+    function currentMonthStr(d = new Date()){ return d.toISOString().slice(0,7); }
+    function openCal(slug){
+      const base = CAL_MAP[slug]; if (!base) return;
+      const url = new URL(base);
+      url.searchParams.set('theme','light');
+      url.searchParams.set('hide_event_type_details','true');
+      url.searchParams.set('overlayCalendar','true');
+      url.searchParams.set('month', currentMonthStr());
+      if (frame) frame.src = url.toString();
+      if (reserver) { reserver.style.display = 'block'; reserver.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    }
+    document.querySelectorAll('#choisir .card[data-cal]').forEach(card=>{
+      card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+      card.addEventListener('click', ()=> openCal(card.dataset.cal));
+      card.addEventListener('keydown', (e)=>{ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); openCal(card.dataset.cal); }});
+    });
+    console.log('[CAL] cartes détectées =', document.querySelectorAll('#choisir .card[data-cal]').length);
+  })();
+  </script>
+
+  <!-- ===== Newsletter ===== -->
+  <section id="newsletter" class="card-section">
+    <div class="container">
+      <h2>La carte de la semaine</h2>
+      <p>Recevez chaque mardi matin votre carte et son interprétation.</p>
+
+      <!-- Bloc MailerLite -->
+      <div id="mlb2-29644786" class="ml-form-embedContainer ml-subscribe-form ml-subscribe-form-29644786">
+        <div class="ml-form-align-center">
+          <div class="ml-form-embedWrapper embedForm">
+
+            <div class="ml-form-embedBody ml-form-embedBodyDefault row-form">
+
+              <div class="ml-form-embedContent">
+                <h4>La Newsletter d'Opanoma</h4>
+                <p>La carte de la semaine&nbsp;</p>
+              </div>
+
+              <form class="ml-block-form"
+                    action="https://assets.mailerlite.com/jsonp/1732807/forms/162808761459673022/subscribe"
+                    method="post" target="_blank">
+                <div class="ml-form-formContent">
+                  <div class="ml-form-fieldRow ml-last-item">
+                    <div class="ml-field-group ml-field-email ml-validate-email ml-validate-required">
+                      <input aria-label="email" aria-required="true" type="email" class="form-control"
+                             name="fields[email]" placeholder="Email" autocomplete="email">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ml-form-embedSubmit">
+                  <button type="submit" class="primary">S'inscrire</button>
+                </div>
+
+                <input type="hidden" name="ml-submit" value="1">
+                <input type="hidden" name="anticsrf" value="true">
+              </form>
+            </div>
+
+            <div class="ml-form-successBody row-success" style="display:none">
+              <div class="ml-form-successContent">
+                <h4>Merci !</h4>
+                <p>Vous êtes bien inscrit·e à la newsletter.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!-- Fin Bloc MailerLite -->
+    </div>
+  </section>
+
+  <!-- Script MailerLite (une seule fois) -->
+  <script src="https://groot.mailerlite.com/js/w/webforms.min.js" type="text/javascript"></script>
+  <script>
+    function ml_webform_success_29644786() {
+      var $ = ml_jQuery || jQuery;
+      $('.ml-subscribe-form-29644786 .row-success').show();
+      $('.ml-subscribe-form-29644786 .row-form').hide();
+    }
+  </script>
+
+<!-- ===== Modal Tirage ===== -->
+<div class="modal" id="tirage-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tirage-modal-title">
+  <div class="modal__overlay" data-close="modal"></div>
+
+  <div class="modal__panel" role="document">
+    <div class="modal__head">
+      <h3 class="modal__title" id="tirage-modal-title">Tirage des cartes</h3>
+      <button class="modal__close" type="button" data-close="modal">Fermer</button>
+    </div>
+
+    <div class="modal__content">
+        
+        
+      <!-- === Choix du tirage === -->
+      <section id="tirage-ia" class="wrap">
+        <h2 id="ia-title">L’IA vous tire les cartes</h2>
+        <div class="card">
+
+          <!-- Thèmes + Question sur la même ligne -->
+<div class="themes-row">
+  <div class="themes" role="group" aria-label="Thème du tirage">
+    <button class="theme" data-theme="santé"   type="button">Santé</button>
+    <button class="theme" data-theme="amour"   type="button">Amour</button>
+    <button class="theme" data-theme="argent"  type="button">Argent</button>
+    <button class="theme" data-theme="travail" type="button">Travail</button>
+  </div>
+
+  <div id="theme-question" class="theme-question" hidden aria-live="polite">
+  <!-- AJOUT -->
+  <div id="chosen-theme" class="chosen-theme" hidden></div>
+
+  <label for="user-question" class="q-label">Votre question (optionnel)</label>
+  <textarea id="user-question" rows="1" maxlength="200" placeholder="Votre question…"></textarea>
+  <div class="q-tools">
+    <small id="q-counter">0/200</small>
+    <button type="button" id="q-clear" class="q-clear">Effacer</button>
+  </div>
+</div>
+</div><!-- 🔚 fin .themes-row -->
+
+
+
+
+          <!-- Modes -->
+          <div class="modes" role="group" aria-label="Mode de tirage" style="margin:8px 0 12px">
+            <button class="mode" data-mode="3" type="button">3 cartes</button>
+            <button class="mode" data-mode="5" type="button">5 cartes (en croix)</button>
+          </div>
+
+          <!-- Grille des cartes -->
+          <div id="tarot-grid" class="grid api-grid"></div>
+
+          <!-- Résumé des tirages -->
+          <div id="api-picks"></div>
+        </div>
+      </section>
+
+      <!-- === Interprétation === -->
+<section id="ia-reading" class="wrap">
+  <div class="card">
+    <h2 id="read-title">Interprétation du tirage</h2>
+
+    <div id="reading-output">
+      Choisissez un thème, posez une question (optionnel), puis tirez 3 ou 5 cartes.
+    </div><!-- /#reading-output -->
+
+    <div class="interpret-actions">
+      <button id="reset-reading" class="btn mode" type="button">🔄 Reset</button>
+      <button id="close-popup" class="btn mode" type="button">🏠 Opanoma.fr</button>
+    </div>
+  </div>
+</section>
+
+    </div> <!-- /.modal__content -->
+  </div>   <!-- /.modal__panel -->
+</div>     <!-- /.modal -->
+
+
+<script src="/assets/js/tarot-app.js?v=20250904"></script>
+ 
+
+  <script>
+    window.addEventListener('load', function() {
+      window.scrollTo(0, 0); // met la page en haut à l’ouverture
+    });
+  </script>
+  
+  <script>
+window.addEventListener('DOMContentLoaded', () => {
+  // ---------- util waitFor ----------
+  const waitFor = (test, next, t = 4000, step = 40) => {
+    const t0 = performance.now();
+    const id = setInterval(() => {
+      try {
+        if (test()) { clearInterval(id); next(); }
+        else if (performance.now() - t0 > t) { clearInterval(id); console.warn('[TAROT] timeout'); }
+      } catch (e) { clearInterval(id); console.error('[TAROT] waitFor error', e); }
+    }, step);
+  };
+
+  // ---------- main ----------
+  waitFor(() => !!window.TAROT_APP, () => {
+    const APP = (window.TAROT_APP = window.TAROT_APP || {});
+    const S   = (APP.state       = APP.state       || {});
+
+    // État par défaut sûr
+    if (S.theme      == null) S.theme = null;
+    if (S.themeLabel == null) S.themeLabel = null;
+    if (!Number.isInteger(S.mode))  S.mode  = 0;
+    if (!Number.isInteger(S.limit)) S.limit = 0;
+    if (!Number.isInteger(S.flips)) S.flips = 0;
+    if (!Array.isArray(S.selected)) S.selected = [];
+    if (typeof S.question !== 'string') S.question = '';
+
+    // No-ops si absents
+    APP.rebuild      = APP.rebuild      || (() => {});
+    APP.renderPicks  = APP.renderPicks  || (() => {});
+    APP.numFor       = APP.numFor       || (c => (typeof c?.n === 'number') ? c.n : (c?.slug?.match(/^(\d+)/)?.[1] | 0));
+    APP.KW           = APP.KW || (window.KW || []);
+
+    // ---------- Helpers UI ----------
+    function enableGridIfReady(){
+      const grid = document.getElementById('tarot-grid');
+      if (!grid) return;
+      const ready = !!(S.theme && S.mode);
+      grid.classList.toggle('disabled', !ready);
+      grid.style.pointerEvents = ready ? '' : 'none';
+      grid.style.opacity       = ready ? '' : '.55';
+    }
+    function resetReading(){
+      const out = document.getElementById('reading-output');
+      if (!out) return;
+      out.classList.remove('loading');
+      out.textContent = 'Choisissez un thème, posez une question (optionnel), puis tirez 3 ou 5 cartes.';
+    }
+
+  // Petit util: debounce
+function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t = setTimeout(()=>fn(...a), ms); }; }
+
+// === Helpers en dehors d'interpretNow (important) ===
+function plainTextFromMaybeHTML(input){
+  if (!input) return '';
+  if (typeof input !== 'string') return String(input);
+  if (input.trim().startsWith('<')) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = input;
+    return tmp.textContent || tmp.innerText || '';
+  }
+  return input;
+}
+
+function focusInterpret(){
+  const section = document.getElementById('ia-reading');
+  if (!section) return;
+
+  // Scroll dans la modale si elle scrolle, sinon scroll normal
+  const scroller = section.closest('.modal__content');
+  if (scroller) {
+    // Aligne le début de la section
+    const top = section.offsetTop - 8;
+    scroller.scrollTo({ top, behavior: 'smooth' });
+  } else {
+    section.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+
+  // Focus clavier (accessibilité) sur le titre ou le bloc texte
+  const focusTarget = document.getElementById('read-title') || document.getElementById('reading-output');
+  if (focusTarget) {
+    focusTarget.setAttribute('tabindex','-1');
+    setTimeout(() => {
+      try { focusTarget.focus({ preventScroll:true }); } catch {}
+    }, 180);
+  }
+}
+
+
+// --- Auto-scroll : remonte la chaîne et scroll tous les conteneurs scrollables
+function getScrollableAncestors(el){
+  const res = [];
+  let n = el;
+  while (n && n instanceof HTMLElement) {
+    const canScroll = n.scrollHeight > n.clientHeight;
+    const style = getComputedStyle(n);
+    const overflowY = style.overflowY;
+    if (canScroll && (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay')) {
+      res.push(n);
+    }
+    if (n.classList.contains('modal__content')) break; // on s'arrête au conteneur de la modale
+    n = n.parentElement;
+  }
+  return res;
+}
+function scrollAllToBottom(nodes){
+  for (const n of nodes) {
+    // nudge pour Safari/iOS
+    n.scrollTop = n.scrollHeight + 1;
+  }
+}
+function isNearBottom(n, tol = 16){
+  return (n.scrollHeight - n.scrollTop - n.clientHeight) <= tol;
+}
+
+
+function typeWriteTo(el, text, opts = {}){
+  const cps = Math.max(10, opts.cps ?? 36);
+  const allowSkip = opts.allowSkip !== false;
+
+  // on cible tous les conteneurs scrollables (ex: #reading-output + .modal__content)
+  const targets = getScrollableAncestors(el);
+  // si aucun parent scrollable, on scrolle au moins l’élément lui-même
+  if (!targets.length) targets.push(el);
+
+  let i = 0, cancelled = false, last = performance.now();
+  let lastScroll = 0; // throttle léger de l'autoscroll
+
+  const finish = () => {
+    el.textContent = text;
+    el.classList.remove('typing');
+    scrollAllToBottom(targets);
+    window.removeEventListener('keydown', onKey);
+    el.removeEventListener('click', onClick);
+    opts.onDone?.();
+  };
+
+  const onKey = (e) => { if (e.key === 'Escape') { cancelled = true; finish(); } };
+  const onClick = () => { cancelled = true; finish(); };
+  if (allowSkip){ window.addEventListener('keydown', onKey); el.addEventListener('click', onClick); }
+
+  el.classList.add('typing');
+  el.textContent = '';
+
+  function step(now){
+    if (cancelled) return;
+    const dt = (now - last) / 1000;
+    last = now;
+
+    const add = Math.max(1, Math.floor(dt * cps));
+    i = Math.min(text.length, i + add);
+    el.textContent = text.slice(0, i);
+
+ // Autoscroll "collant" : on force le bas tant que l’utilisateur
+// n’a pas remonté de plus de 80px (throttle à 16ms)
+if (now - lastScroll > 16) {
+  const userPulledUp = targets.some(t => (t.scrollHeight - t.clientHeight - t.scrollTop) > 80);
+  if (!userPulledUp) {
+    scrollAllToBottom(targets); // scroll #reading-output + .modal__content
+  }
+  lastScroll = now;
+}
+
+
+    if (i < text.length) {
+      requestAnimationFrame(step);
+    } else {
+      finish();
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+
+// Fallback local simple si l’API est indispo
+function showLocalFallback(outEl){
+  try {
+    const S  = TAROT_APP.state || {};
+    const KW = TAROT_APP.KW || [];
+    const numFor = TAROT_APP.numFor || (c => c?.n ?? null);
+    const theme = S.themeLabel || S.theme || 'général';
+    const q     = (document.querySelector('#user-question')?.value || '').trim();
+    const lines = [];
+
+    lines.push(`Thème : ${theme}`);
+    if (q) lines.push(`Question : ${q}`);
+    lines.push('');
+    lines.push(`Cartes tirées (${(S.selected||[]).length}) :`);
+    (S.selected||[]).forEach(c => {
+      const idx = numFor(c);
+      const words = Array.isArray(KW[idx]) ? KW[idx].join(' • ') : '…';
+      lines.push(`• ${c?.label || 'Carte'} — ${words}`);
+    });
+    lines.push('');
+    lines.push('Lecture rapide :');
+    if (S.selected?.[0]) lines.push(`• Situation : ${S.selected[0].label}`);
+    if (S.selected?.[1]) lines.push(`• Défi : ${S.selected[1].label}`);
+    if (S.selected?.[2]) lines.push(`• Conseil : ${S.selected[2].label}`);
+    if (S.selected?.[3]) lines.push(`• Ressource : ${S.selected[3].label}`);
+    if (S.selected?.[4]) lines.push(`• Issue : ${S.selected[4].label}`);
+    lines.push('');
+    lines.push('⚠️ Fallback local (API indisponible). Prenez ce tirage comme un éclairage, pas une fatalité.');
+
+    outEl.classList.remove('loading');
+    outEl.textContent = lines.join('\n');
+  } catch {
+    outEl.classList.remove('loading');
+    outEl.textContent = 'Impossible d’afficher l’interprétation pour le moment.';
+  }
+}
+
+// === interpretNow propre, avec un seul try/catch/finally ===
+async function interpretNow(){
+  const out = document.getElementById('reading-output');
+  if (!out) return;
+  if (interpretNow._running) return;
+  interpretNow._running = true;
+
+  // Loader
+  out.classList.add('loading');
+  out.innerHTML = `
+    <div class="loader"><div class="spinner"></div><div>Interprétation en cours…</div></div>
+  `;
+
+  try {
+    const S = TAROT_APP.state || {};
+    const payload = {
+      theme: S.theme || 'général',
+      positions: (S.mode === 5
+        ? ['Situation','Défi','Conseil','Ressource','Issue']
+        : ['Situation','Défi','Conseil']
+      ).slice(0, (S.selected || []).length),
+      cards: (S.selected || []).map(c => {
+        const n = TAROT_APP.numFor?.(c);
+        return {
+          name: c?.label || c?.name || c?.slug || 'Carte',
+          number: (typeof n === 'number' ? n : null),
+          reversed: !!c?.reversed,
+          keywords: (typeof n === 'number' && Array.isArray(TAROT_APP.KW?.[n])) ? TAROT_APP.KW[n] : []
+        };
+      }),
+      user: { question: (document.querySelector('#user-question')?.value || '').trim() }
+    };
+
+    // Appel backend (slash final pour éviter 301 → 405)
+    const res = await fetch('/api/tarot/summarize/', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      let bodyText = '';
+      try { bodyText = await res.text(); } catch {}
+      throw new Error(`HTTP ${res.status} ${res.statusText} — ${bodyText.slice(0,200)}`);
+    }
+
+    let data = {};
+    try { data = await res.json(); } catch { data = {}; }
+
+    const txt = (data && (data.text || data.answer || data.result) || '').trim();
+
+    out.classList.remove('loading');
+    if (txt) {
+      const plain = plainTextFromMaybeHTML(txt);
+      typeWriteTo(out, plain, { cps: 42, allowSkip: true });
+    } else {
+      showLocalFallback(out);
+    }
+
+  } catch (err){
+    console.error('[IA] erreur', err);
+    out.classList.remove('loading');
+    out.innerHTML = `
+      <div class="loader" style="align-items:flex-start">
+        <div>
+          <div style="font-weight:700;color:#a34d57">⚠️ L’IA n’a pas répondu</div>
+          <div style="color:#6b5f5a;font-size:13px;white-space:pre-wrap;margin-top:6px">
+            ${String(err.message || err).slice(0,400)}
+          </div>
+          <button id="retry-interpret" class="btn" type="button" style="margin-top:10px">Réessayer</button>
+        </div>
+      </div>`;
+    document.getElementById('retry-interpret')?.addEventListener('click', () => interpretNow());
+    showLocalFallback(out);
+  } finally {
+    interpretNow._running = false;
+  }
+}
+
+// ——— suite: ton hook renderPicks / gridWatch / boot existent déjà en-dessous ———
+
+
+    // ---------- Question ----------
+    function setupQuestion(){
+      const ta = document.getElementById('user-question');
+      const counter = document.getElementById('q-counter');
+      const clearBtn = document.getElementById('q-clear');
+      if (!ta) return;
+      function update(){
+        S.question = ta.value.trim();
+        if (counter) counter.textContent = ta.value.length + '/200';
+      }
+      ta.addEventListener('input', update);
+      clearBtn?.addEventListener('click', () => { ta.value=''; update(); ta.focus(); });
+      update();
+    }
+
+    // ---------- Hook renderPicks (une seule fois) ----------
+if (!APP.__iaHooked) {
+  const _rp = APP.renderPicks;
+  const safeRun = debounce(() => {
+    const ok = S.theme && S.mode && (S.selected||[]).length === S.limit;
+    if (ok) { focusInterpret(); interpretNow(); }
+;
+  }, 60);
+  APP.renderPicks = function(...args){
+    const r = _rp.apply(this, args);
+    safeRun();
+    return r;
+  };
+  APP.__iaHooked = true;
+}
+
+// Filet de sécurité : interprète dès que le quota est atteint via clic carte
+if (!APP.__gridWatch) {
+  const grid = document.getElementById('tarot-grid');
+  if (grid) {
+    grid.addEventListener('click', debounce(() => {
+      const ok = S.theme && S.mode && (S.selected||[]).length === S.limit;
+      if (ok) { focusInterpret(); interpretNow(); }
+
+    }, 50), true); // useCapture=true pour attraper tôt
+  }
+  APP.__gridWatch = true;
+}
+
+// --- Actions Reset ---
+document.getElementById('reset-reading')?.addEventListener('click', () => {
+  const APP = window.TAROT_APP || (window.TAROT_APP = {});
+  const S   = APP.state       || (APP.state = {});
+  
+  // Etat
+  S.theme = null;
+  S.themeLabel = null;
+  S.mode = 0;
+  S.limit = 0;
+  S.flips = 0;
+  S.selected = [];
+  S.question = '';
+
+  // Stopper un éventuel typewriter
+  const out = document.getElementById('reading-output');
+  if (out){
+    out.classList.remove('loading','typing');
+    out.textContent = 'Choisissez un thème, posez une question (optionnel), puis tirez 3 ou 5 cartes.';
+  }
+  if (typeof window.interpretNow === 'function') {
+    window.interpretNow._running = false;
+  } else if (typeof APP.interpretNow === 'function') {
+    APP.interpretNow._running = false;
+  }
+
+  // UI cartes & picks
+  document.querySelectorAll('.tarot-card').forEach(c => c.removeAttribute('data-flipped'));
+  document.getElementById('api-picks')?.replaceChildren();
+
+  // Thèmes / Modes (visuel + aria)
+  document.querySelectorAll('#tirage-ia [data-theme]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#tirage-ia [data-mode]').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-pressed','false');
+  });
+
+  // Désactiver à nouveau les boutons tirage jusqu’au choix du thème
+  if (typeof window.setModesEnabled === 'function') {
+    window.setModesEnabled(false);
+  } else {
+    document.querySelectorAll('#tirage-ia [data-mode]').forEach(b => {
+      b.disabled = true;
+      b.setAttribute('aria-disabled','true');
+    });
+  }
+
+  // Cacher panneau question + libellé
+  const qWrap = document.getElementById('theme-question');
+  if (qWrap){
+    qWrap.hidden = true;
+    qWrap.classList.add('hidden');
+    qWrap.setAttribute('aria-hidden','true');
+  }
+  const chosen = document.getElementById('chosen-theme');
+  if (chosen){
+    chosen.hidden = true;
+    chosen.textContent = '';
+  }
+
+  // Champ question
+  const ta = document.getElementById('user-question');
+  if (ta) ta.value = '';
+  const counter = document.getElementById('q-counter');
+  if (counter) counter.textContent = '0/200';
+
+  // Re-verrouiller la grille
+  const grid = document.getElementById('tarot-grid');
+  if (grid){
+    grid.classList.add('disabled');
+    grid.style.pointerEvents = 'none';
+    grid.style.opacity = '.55';
+  }
+
+  // Rebuild/Render (no-ops si absents)
+  APP.rebuild?.();
+  APP.renderPicks?.();
+
+  // Focus + scroll en haut
+  const topTitle = document.getElementById('ia-title') || document.getElementById('tirage-modal');
+  try { topTitle?.focus({ preventScroll:true }); } catch {}
+  const scroller = document.querySelector('.modal__content');
+  if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+
+document.getElementById('close-popup')?.addEventListener('click', () => {
+  const modal = document.getElementById('tirage-modal');
+  if (!modal) return;
+  modal.removeAttribute('open');
+  modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+});
+
+
+
+    // ---------- Boot (unique) ----------
+if (!APP.__iaBooted) {
+  setupThemes();        // écoute [data-theme]
+  setupModes();         // écoute [data-mode]
+  setupQuestion?.();    // textarea / compteur (si présents)
+  enableGridIfReady?.();
+
+  // Mode par défaut = 3 si rien n'est choisi
+  if (!S.mode) setMode(3);
+
+  // Si un tirage est déjà complet (ex: retour de navigation / re-open)
+  if (S.theme && S.mode && S.flips === S.limit && (S.selected || []).length === S.limit) {
+    APP.interpretNow?.();  // ou interpretNow?.() selon où tu l’as défini
+  }
+
+  APP.__iaBooted = true;   // drapeau anti double-boot
+}
+  });
+});
+</script>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // Anti-doublon
+  if (window.__tirageOpenerBound) return;
+  window.__tirageOpenerBound = true;
+
+  // Boutons compatibles (garde celui que tu utilises)
+  const OPENERS = [
+    '[data-open-modal]',                 // <button data-open-modal="tirage-modal">
+    'a[href^="#tirage-modal"]',          // <a href="#tirage-modal">
+    '[data-target="#tirage-modal"]',     // <button data-target="#tirage-modal">
+    '[aria-controls="tirage-modal"]',    // <button aria-controls="tirage-modal">
+    '#open-tirage',                      // <a id="open-tirage">
+    '[data-action="open-tirage"]'        // <button data-action="open-tirage">
+  ].join(',');
+
+  // Récupère l'ID cible depuis le bouton
+  const getTargetId = (el) => {
+    const v1 = el.getAttribute('data-open-modal');
+    if (v1 && v1 !== 'true') return v1.replace(/^#/, '');
+    const href = el.getAttribute('href');
+    if (href && href.startsWith('#')) return href.slice(1);
+    const v2 = el.getAttribute('data-target') || el.getAttribute('aria-controls');
+    if (v2) return v2.replace(/^#/, '');
+    return 'tirage-modal';
+  };
+
+  // Ouvre la modale (sans dépendance)
+  const openModal = (id = 'tirage-modal') => {
+    const modal = document.getElementById(id);
+    if (!modal) return console.warn('[MODAL] introuvable :', id);
+
+    modal.setAttribute('open', '');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    // (Re)construire la grille si vide
+    const grid = document.querySelector('#tarot-grid');
+    if (grid && !grid.children.length) {
+      window.TAROT_APP?.rebuild?.();
+    }
+  };
+
+  // Ferme la modale (overlay ou bouton data-close="modal")
+  const setupClose = (id = 'tirage-modal') => {
+    const modal = document.getElementById(id);
+    if (!modal || modal.__closeBound) return;
+    modal.__closeBound = true;
+
+    modal.addEventListener('click', (e) => {
+      if (!e.target.matches('[data-close="modal"], .modal__overlay')) return;
+      modal.removeAttribute('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    });
+  };
+
+  // Ouvrir via clic
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(OPENERS);
+    if (!btn) return;
+    e.preventDefault();
+    const id = getTargetId(btn);
+    setupClose(id);
+    openModal(id);
+  });
+
+  // Ouvrir via clavier (Enter/Espace)
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const btn = e.target.closest(OPENERS);
+    if (!btn) return;
+    e.preventDefault();
+    const id = getTargetId(btn);
+    setupClose(id);
+    openModal(id);
+  });
+
+  // Helper console
+  window.openTirage = () => { setupClose('tirage-modal'); openModal('tirage-modal'); };
+});
+</script>
+
+
+<script>
+// === THEMES : binding simple & fiable ===
+(function(){
+  if (window.__themesBound) return; 
+  window.__themesBound = true;
+
+  // garantit un état TAROT_APP minimal
+  const APP = (window.TAROT_APP = window.TAROT_APP || {});
+  const S   = (APP.state       = APP.state       || {});
+  if (S.theme == null) S.theme = null;
+  if (!Array.isArray(S.selected)) S.selected = [];
+  if (!Number.isInteger(S.mode)) S.mode = 0;
+  if (!Number.isInteger(S.limit)) S.limit = 0;
+  if (!Number.isInteger(S.flips)) S.flips = 0;
+
+  // no-ops si absents
+  APP.rebuild     = APP.rebuild     || function(){};
+  APP.renderPicks = APP.renderPicks || function(){};
+
+  function enableGridIfReady(){
+    const grid = document.getElementById('tarot-grid');
+    if (!grid) return;
+    const ready = !!(S.theme && S.mode);
+    grid.classList.toggle('disabled', !ready);
+    grid.style.pointerEvents = ready ? '' : 'none';
+    grid.style.opacity       = ready ? '' : '.55';
+  }
+  function resetReading(){
+    const out = document.getElementById('reading-output');
+    if (!out) return;
+    out.classList.remove('loading');
+    out.textContent = 'Choisissez un thème, posez une question (optionnel), puis tirez 3 ou 5 cartes.';
+  }
+
+  function reveal(el){
+    if (!el) return;
+    el.hidden = false;
+    el.classList?.remove('hidden','d-none','is-hidden','u-hidden');
+    el.style.display = '';
+    el.setAttribute('aria-hidden','false');
+  }
+
+  function setTheme(val, label){
+    console.log('[THEME] click →', val, label);
+    S.theme = val;
+    S.themeLabel = label || val;
+
+    // MAJ visuelle des boutons thème
+    document.querySelectorAll('#tirage-ia [data-theme]').forEach(b=>{
+      b.classList.toggle('active', b.getAttribute('data-theme') === val);
+    });
+
+    // Affiche le bloc question + libellé choisi
+    reveal(document.getElementById('theme-question'));
+    const chosen = document.getElementById('chosen-theme');
+    if (chosen){ chosen.textContent = label || val; reveal(chosen); }
+
+    // reset sélection cartes
+    S.flips = 0;
+    S.selected = [];
+    document.querySelectorAll('.tarot-card').forEach(c=> c.removeAttribute('data-flipped'));
+
+    // (re)rendu
+    APP.rebuild();
+    APP.renderPicks();
+
+    enableGridIfReady();
+    resetReading();
+    window.__enableModesAfterTheme?.();
+
+  }
+
+  // Binding direct sur les boutons présents (pas de délégation)
+  const btns = document.querySelectorAll('#tirage-ia [data-theme]');
+  console.log('[THEME] boutons détectés =', btns.length);
+  btns.forEach(btn=>{
+    btn.addEventListener('click', () => {
+      setTheme(btn.getAttribute('data-theme'), (btn.textContent || '').trim());
+    });
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setTheme(btn.getAttribute('data-theme'), (btn.textContent || '').trim());
+      }
+    });
+  });
+})();
+</script>
+
+<script>
+// === MODES : binding simple & fiable (3 / 5) ===
+(function(){
+  if (window.__modesBound) return;
+  window.__modesBound = true;
+
+  // État minimal garanti
+  const APP = (window.TAROT_APP = window.TAROT_APP || {});
+  const S   = (APP.state       = APP.state       || {});
+  if (!Number.isInteger(S.mode))   S.mode   = 0;
+  if (!Number.isInteger(S.limit))  S.limit  = 0;
+  if (!Number.isInteger(S.flips))  S.flips  = 0;
+  if (!Array.isArray(S.selected))  S.selected = [];
+
+  // No-ops si absents
+  APP.rebuild     = APP.rebuild     || function(){};
+  APP.renderPicks = APP.renderPicks || function(){};
+
+  function enableGridIfReady(){
+    const grid = document.getElementById('tarot-grid');
+    if (!grid) return;
+    const ready = !!(S.theme && S.mode);
+    grid.classList.toggle('disabled', !ready);
+    grid.style.pointerEvents = ready ? '' : 'none';
+    grid.style.opacity       = ready ? '' : '.55';
+  }
+  function resetReading(){
+    const out = document.getElementById('reading-output');
+    if (!out) return;
+    out.classList.remove('loading');
+    out.textContent = 'Choisissez un thème, posez une question (optionnel), puis tirez 3 ou 5 cartes.';
+  }
+
+  function setMode(val){
+    const m = parseInt(val, 10) || 0;
+    console.log('[MODE] click →', m);
+    S.mode   = m;
+    S.limit  = m;
+    S.flips  = 0;
+    S.selected = [];
+
+    // Reset visuel des cartes retournées
+    document.querySelectorAll('.tarot-card').forEach(c => c.removeAttribute('data-flipped'));
+
+    // MAJ visuelle des boutons
+    document.querySelectorAll('#tirage-ia [data-mode]').forEach(b => {
+      const active = b.getAttribute('data-mode') === String(m);
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+
+    // (re)rendu
+    APP.rebuild();
+    APP.renderPicks();
+
+    enableGridIfReady();
+    resetReading();
+  }
+
+  // Binding direct sur les boutons présents (pas de délégation)
+  const btns = document.querySelectorAll('#tirage-ia [data-mode]');
+  console.log('[MODE] boutons détectés =', btns.length);
+  btns.forEach(btn=>{
+    btn.addEventListener('click', () => setMode(btn.getAttribute('data-mode')));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setMode(btn.getAttribute('data-mode'));
+      }
+    });
+  });
+
+  // Option : choisir 3 cartes par défaut si aucun mode encore choisi
+  if (!S.mode) {
+    const defaultBtn = document.querySelector('#tirage-ia [data-mode="3"]');
+    if (defaultBtn) setMode(3);
+  }
+})();
+</script>
+
+<script>
+// === Déclenchement auto de l'interprétation quand le tirage est complet ===
+(function(){
+  const APP = (window.TAROT_APP = window.TAROT_APP || {});
+  const S   = (APP.state       = APP.state       || {});
+
+  function isReady(){
+    const sel = Array.isArray(S.selected) ? S.selected.length : 0;
+    return !!S.theme && !!S.mode && S.limit > 0 && sel === S.limit && S.flips === S.limit;
+  }
+
+  function maybeInterpret(){
+    if (!isReady()) return;
+    // micro délai pour laisser le DOM se mettre à jour
+    setTimeout(() => {
+      if (isReady()) {
+        const run = APP.interpretNow || window.interpretNow;
+        if (typeof run === 'function') run();
+      }
+    }, 0);
+  }
+
+  // 1) Hook sur renderPicks (une seule fois)
+  if (typeof APP.renderPicks === 'function' && !APP.__rpHooked) {
+    const _rp = APP.renderPicks;
+    APP.renderPicks = function(...args){
+      const r = _rp.apply(this, args);
+      try {
+        maybeInterpret();
+      } catch (e) {
+        console.error('[maybeInterpret error]', e);
+      }
+      return r;
+    };
+    APP.__rpHooked = true;
+  }
+
+  // 2) Filet de sécu : observe la bande #api-picks (si présente)
+  (function observePicks(){
+    if (APP.__obsBound) return;
+    const host = document.getElementById('api-picks');
+    if (!host || !('MutationObserver' in window)) return;
+    const obs = new MutationObserver(maybeInterpret);
+    obs.observe(host, { childList: true, subtree: true });
+    APP.__obsBound = true;
+  })();
+
+  // 3) Autre filet : après chaque clic sur une carte, re-teste
+  document.addEventListener('click', (e) => {
+    if (e.target.closest?.('.tarot-card')) {
+      setTimeout(maybeInterpret, 50);
+    }
+  });
+
+  // expose pour debug
+  APP.maybeInterpret = maybeInterpret;
+})();
+</script>
+
+<script>
+// --- utils affichage message proche des modes ---
+function showModesHint(msg){
+  const modes = document.querySelector('#tirage-ia .modes');
+  if (!modes) return alert(msg); // fallback
+  let hint = document.getElementById('mode-hint');
+  if (!hint){
+    hint = document.createElement('div');
+    hint.id = 'mode-hint';
+    hint.style.cssText = 'margin-top:6px;font:600 13px/1.2 Inter,system-ui,sans-serif;color:#a34d57;';
+    modes.insertAdjacentElement('afterend', hint);
+  }
+  hint.textContent = msg;
+
+  // petit shake sur les thèmes pour guider l’utilisateur
+  const themes = document.querySelector('#tirage-ia .themes');
+  themes?.classList.add('shake');
+  setTimeout(()=> themes?.classList.remove('shake'), 500);
+
+  // efface le message après 2s
+  clearTimeout(showModesHint._t);
+  showModesHint._t = setTimeout(()=> { if (hint) hint.textContent = ''; }, 2000);
+}
+
+// --- activer/désactiver les boutons tirage (3/5) ---
+function setModesEnabled(on){
+  document.querySelectorAll('#tirage-ia [data-mode]').forEach(b=>{
+    b.disabled = !on;
+    b.setAttribute('aria-disabled', on ? 'false' : 'true');
+    if (!on) {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed','false');
+    }
+  });
+}
+
+// --- au boot : désactiver si pas de thème choisi ---
+(function initModesLock(){
+  const S = (window.TAROT_APP = window.TAROT_APP || {}).state || {};
+  const hasTheme = !!S.theme;
+  setModesEnabled(!!hasTheme);
+})();
+
+// --- intégrer les gardes dans les handlers existants ---
+// Intercepter les clics sur [data-mode] si aucun thème
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest?.('#tirage-ia [data-mode]');
+  if (!btn) return;
+  const S = (window.TAROT_APP = window.TAROT_APP || {}).state || {};
+  if (!S.theme){
+    e.preventDefault();
+    showModesHint('Choisissez d’abord un thème.');
+    return;
+  }
+}, true); // capture pour bloquer avant d’autres listeners
+
+// Idem clavier
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const btn = e.target.closest?.('#tirage-ia [data-mode]');
+  if (!btn) return;
+  const S = (window.TAROT_APP = window.TAROT_APP || {}).state || {};
+  if (!S.theme){
+    e.preventDefault();
+    showModesHint('Choisissez d’abord un thème.');
+  }
+}, true);
+
+// --- lorsqu’un thème est choisi → réactiver les modes ---
+// Appelle ceci DANS ton setTheme, à la fin :
+window.__enableModesAfterTheme = function(){
+  setModesEnabled(true);
+  // tu peux aussi remettre le message à blanc
+  const hint = document.getElementById('mode-hint');
+  if (hint) hint.textContent = '';
+};
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+:root{
+  --paper:#fff; --ink:#1f1a1a; --muted:#6b5f5a; --accent:#a34d57; --beige:#f6efe8;
+  --radius:16px; --container:1100px; --shadow:0 12px 40px rgba(0,0,0,.08);
+  --gap-1:8px; --gap-2:12px; --gap-3:16px; --gap-4:24px; --gap-5:32px;
+}
+
+/* Reset + layout */
+*{box-sizing:border-box} html,body{height:100%} body{margin:0;background:var(--beige);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6}
+img,svg{display:block;max-width:100%} a{color:inherit;text-decoration:none}
+.container{max-width:var(--container);margin-inline:auto;padding:var(--gap-4)}
+.row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--gap-3)}
+header{position:sticky;top:0;z-index:10;background:rgba(246,239,232,.85);backdrop-filter:blur(8px);border-bottom:1px solid rgba(0,0,0,.06)}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:800}.logo img{height:28px;border-radius:6px}
+.actions{display:flex;gap:var(--gap-2);justify-self:center;flex-wrap:wrap}
+.socials{justify-self:end;display:flex;gap:10px}.socials .icon{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;transition:transform .12s ease}.socials .icon svg{filter:invert(1) drop-shadow(0 0 1.2px rgba(0,0,0,.65));opacity:.95}.socials .icon:hover{transform:translateY(-1px)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#fff;border:1px solid rgba(0,0,0,.12);box-shadow:var(--shadow);font-weight:600}
+.btn.small{font-size:.92rem;padding:8px 12px}
+.btn.ghost{background:transparent;border-style:dashed}
+.hero{position:relative;min-height:62vh;display:grid;place-items:center;text-align:left;overflow:hidden;border-bottom:1px solid rgba(0,0,0,.08)}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(246,239,232,0), rgba(246,239,232,.6) 60%, var(--beige) 100%)}
+.hero .bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:saturate(1.05) contrast(1.02)}
+.hero .card{position:relative;z-index:1;background:rgba(255,255,255,.82);backdrop-filter:blur(8px);border:1px solid rgba(0,0,0,.06);border-radius:24px;padding:28px;box-shadow:var(--shadow);max-width:560px}
+.mega{font-family:Fraunces,serif;line-height:1.1;font-size:clamp(36px,6vw,56px);margin:0 0 8px}
+.sub{margin:0 0 var(--gap-3);color:#4b403d}
+.grid{display:grid;gap:var(--gap-3);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:var(--radius);padding:var(--gap-3);box-shadow:var(--shadow)}
+footer{padding:32px 0;color:#635851}
+
+/* API */
+.api{margin-top:var(--gap-5)} .modes{display:flex;gap:8px;align-items:center;margin:8px 0 12px}
+.modes .mode.active{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.api-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+.api-grid.disabled{pointer-events:none;opacity:.55}
+.tarot-card{position:relative;padding:0;border:0;background:none;cursor:pointer;perspective:800px}
+.tarot-card .flip{position:relative;width:100%;aspect-ratio:2/3;transform-style:preserve-3d;transition:transform .5s ease}
+.tarot-card[data-flipped="1"] .flip{transform:rotateY(180deg)}
+.tarot-card .side{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.08);box-shadow:var(--shadow)}
+.tarot-card .side.front{transform:rotateY(180deg)}
+.tarot-card .side img{width:100%;height:100%;object-fit:cover}
+.tarot-card.over-limit .side{border-color:#d44;box-shadow:0 0 0 2px rgba(220,0,0,.6), var(--shadow)}
+@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
+.tarot-card.over-limit{animation:shake .28s ease}
+
+/* Slots (sous la grille) */
+#api-slots{margin-top:16px;padding:12px;border:1px solid rgba(0,0,0,.08);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
+#api-slots .slots-row{display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:nowrap}
+#api-slots .slot{flex:0 0 var(--card-w,96px);width:var(--card-w,96px);display:flex;flex-direction:column;align-items:center}
+#api-slots .slot-label{font:700 12px/1.2 Inter,system-ui,sans-serif;color:var(--accent);margin:0 0 6px;text-align:center}
+#api-slots .slot-card{width:100%;aspect-ratio:2/3;border-radius:10px;overflow:hidden;border:1px dashed rgba(0,0,0,.18);background:#faf8f7;display:flex;align-items:center;justify-content:center}
+#api-slots .slot-card.is-empty::after{content:"";width:36%;height:36%;border-radius:8px;border:1px dashed rgba(0,0,0,.15)}
+#api-slots .slot-card img{width:100%;height:100%;object-fit:cover;display:block;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow)}
+#api-slots .slot-kw{margin-top:6px;text-align:center}
+#api-slots .slot-kw span{display:block;font-weight:700;font-size:11px;line-height:1.25;margin:2px 0;color:var(--muted)}
+
+/* Responsive */
+@media (max-width:960px){ .container{padding:var(--gap-3)} .hero{min-height:56vh} }
+@media (max-width:560px){ .hero .card{padding:20px;border-radius:18px} .logo img{height:24px} .btn{padding:9px 12px} .socials .icon{width:32px;height:32px} }
+
+/* ==== API RESCUE (taille cartes + slots) ==== */
+
+/* Cartes de la grille : taille raisonnable */
+#api-tirage .api-grid{
+  display:grid !important;
+  gap:12px !important;
+  grid-template-columns:repeat(auto-fill, minmax(92px, 1fr)) !important;
+}
+#api-tirage .tarot-card{ position:relative; padding:0; border:0; background:transparent; cursor:pointer; perspective:800px; }
+#api-tirage .tarot-card .flip{ width:100% !important; aspect-ratio:2/3 !important; transform-style:preserve-3d; transition:transform .5s ease; }
+#api-tirage .tarot-card[data-flipped="1"] .flip{ transform:rotateY(180deg); }
+#api-tirage .tarot-card .side{ position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; overflow:hidden; border:1px solid rgba(0,0,0,.10); box-shadow:0 12px 40px rgba(0,0,0,.08); }
+#api-tirage .tarot-card .side.front{ transform:rotateY(180deg); }
+#api-tirage .tarot-card .side img{ width:100% !important; height:100% !important; object-fit:cover !important; display:block; }
+
+/* Cadre des slots (sous la grille) */
+#api-slots{
+  margin-top:16px !important;
+  padding:12px !important;
+  border:1px solid rgba(0,0,0,.10);
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 12px 40px rgba(0,0,0,.08);
+}
+#api-slots .slots-row{
+  display:flex; justify-content:center; align-items:flex-start;
+  gap:12px; flex-wrap:nowrap;
+}
+#api-slots .slot{
+  box-sizing:border-box;
+  width:var(--card-w,96px); flex:0 0 var(--card-w,96px);
+  display:flex; flex-direction:column; align-items:center;
+}
+#api-slots .slot-label{
+  text-align:center; margin:0 0 6px;
+  font:700 12px/1.2 Inter,system-ui,sans-serif; color:var(--accent);
+}
+#api-slots .slot-card{
+  width:100%; aspect-ratio:2/3; border-radius:10px; overflow:hidden;
+  border:1px dashed rgba(0,0,0,.18); background:#faf8f7;
+  display:flex; align-items:center; justify-content:center;
+}
+#api-slots .slot-card.is-empty::after{
+  content:""; width:36%; height:36%; border-radius:8px; border:1px dashed rgba(0,0,0,.15);
+}
+#api-slots .slot-card img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  border:1px solid rgba(0,0,0,.06);
+}
+#api-slots .slot-kw{ margin-top:6px; text-align:center; }
+#api-slots .slot-kw span{
+  display:block; font-weight:700; font-size:11px; line-height:1.25; margin:2px 0; color:var(--muted);
+}
+
+/* === API tirage — état “nickel” === */
+
+/* Grille des 22 dos */
+.api-grid{
+  display:grid;
+  gap:12px;
+  grid-template-columns:repeat(auto-fill, minmax(90px,1fr));
+}
+.api-grid.disabled{ pointer-events:none; opacity:.55; }
+
+/* Carte + flip */
+.tarot-card{ position:relative; padding:0; border:0; background:none; cursor:pointer; perspective:800px; }
+.tarot-card .flip{ position:relative; width:100%; aspect-ratio:2/3; transform-style:preserve-3d; transition:transform .5s ease; }
+.tarot-card[data-flipped="1"] .flip{ transform:rotateY(180deg); }
+.tarot-card .side{
+  position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; overflow:hidden;
+  border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow);
+}
+.tarot-card .side.front{ transform:rotateY(180deg); }
+.tarot-card .side img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tarot-card.over-limit .side{ border-color:#d44; box-shadow:0 0 0 2px rgba(220,0,0,.6), var(--shadow); }
+@keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-2px)}100%{transform:translateX(0)}}
+.tarot-card.over-limit{ animation:shake .28s ease; }
+
+/* Résultats SOUS le cadre, centrés */
+#api-picks{
+  --pick-w: 96px;              /* largeur fallback – remplacée par JS */
+  display:flex;
+  justify-content:center;      /* centrage horizontal */
+  align-items:flex-start;
+  gap:12px;
+  margin-top:20px;             /* espace sous le cadre */
+  overflow-x:auto;
+  width:100%;
+  padding-bottom:4px;
+}
+
+/* Carte résultat (vignette) — même largeur que la grille via --pick-w */
+#api-picks .result-card{
+  flex:0 0 var(--pick-w,96px);
+  width:var(--pick-w,96px);
+  box-sizing:border-box;
+}
+
+/* Étiquette “Tirage 1/2/3…” au-dessus */
+#api-picks .pick-tag{
+  margin:0 0 6px 0;
+  text-align:center;
+  font:700 12px/1.2 Inter,system-ui,sans-serif;
+  color:var(--accent);
+}
+
+/* Image */
+#api-picks .result-card-inner{
+  width:100%;
+  aspect-ratio:2 / 3;
+  overflow:hidden;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.08);
+  box-shadow:var(--shadow);
+  background:#fff;
+}
+#api-picks .result-card-inner img{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* Mots-clés : 1 par ligne, petit, gras */
+#api-picks .pick-kw{
+  margin-top:6px;
+  text-align:center;
+}
+#api-picks .pick-kw span{
+  display:block;               /* 1 mot par ligne */
+  font:700 11px/1.25 Inter,system-ui,sans-serif;
+  color:var(--muted);
+}

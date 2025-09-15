@@ -1,0 +1,11 @@
+Options -MultiViews
+DirectoryIndex index.php
+
+RewriteEngine On
+# Fichiers réels → direct
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+# Tout le reste → index.php (permet /summarize et /summarize/)
+RewriteRule ^ index.php [L,QSA]
+

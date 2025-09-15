@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>l’Œil d’Opanoma</title>
+
+  <!-- Polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+  :root{
+    --beige:#f6efe8; --ink:#1f1a1a; --line:rgba(0,0,0,.08);
+    --accent:#a34d57; --shadow:0 12px 40px rgba(0,0,0,.08);
+    --container:1100px;
+  }
+  *{ box-sizing:border-box }
+  html,body{ margin:0; padding:0 }
+  body{ font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:var(--ink); background:var(--beige) }
+
+  /* ===== Topbar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:1000;
+    background:rgba(246,239,232,.85);
+    -webkit-backdrop-filter:saturate(1.1) blur(8px);
+    backdrop-filter:saturate(1.1) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar__row{
+    max-width:var(--container); margin:0 auto; padding:14px 24px;
+    display:grid; align-items:center; gap:16px;
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .brand{display:inline-flex; align-items:center; gap:10px; font-weight:800}
+  .brand img{height:30px; width:auto; display:block; border-radius:6px}
+  .brand__name{letter-spacing:.2px; white-space:nowrap}
+  .nav{display:flex; align-items:center; gap:12px; justify-self:center}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:9px 14px; border-radius:999px; font-weight:600;
+    background:#fff; color:var(--ink);
+    border:1px solid rgba(0,0,0,.12); box-shadow:var(--shadow);
+    text-decoration:none; transition:transform .12s ease; white-space:nowrap;
+  }
+  .btn:hover{ transform:translateY(-1px) }
+  .nav__week{ margin-left:18px }
+  .socials{justify-self:end; display:flex; align-items:center; gap:10px}
+  .icon{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; color:#111; text-decoration:none; border-radius:8px; transition:transform .12s ease; }
+  .icon:hover{ transform:translateY(-1px) }
+  .icon svg{ filter: invert(1) drop-shadow(0 0 1px rgba(0,0,0,.55)); opacity:.95 }
+  @media (max-width:720px){
+    .topbar__row{ grid-template-columns:1fr auto }
+    .socials{ display:none }
+    .nav__week{ margin-left:8px }
+    .brand__name{ font-size:14px }
+  }
+
+  /* ===== Titre de la modale + aide ===== */
+  .modal__titlewrap{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  }
+  .modal__hint{
+    font:600 13px/1.3 Inter,system-ui,sans-serif;
+    color:#6b5f5a;
+    white-space:nowrap;
+  }
+  @media (max-width:640px){
+    .modal__hint{ white-space:normal }
+  }
+
+  /* ===== Loader & zone d'interprétation ===== */
+  #reading-output{ 
+    position: relative;
+    min-height: 64px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    max-height: clamp(240px, 55vh, 600px);
+    overflow-y: auto;
+  }
+  #reading-output.loading{ opacity:.8 }
+  #reading-output .loader{
+    display:flex; align-items:center; gap:10px;
+    padding:10px 12px; border-radius:12px; background:#fff;
+    border:1px solid rgba(0,0,0,.06); box-shadow:var(--shadow);
+  }
+  #reading-output .spinner{
+    width:18px; height:18px; border-radius:50%;
+    border:3px solid rgba(163,77,87,.25);
+    border-top-color: var(--accent);
+    animation: tarot-spin .9s linear infinite;
+  }
+  @keyframes tarot-spin { to { transform: rotate(360deg); } }
+
+  /* ===== Cal.com ===== */
+  #calframe { width:100%; min-height:650px; border:0; border-radius:12px; }
+  #reserver { display:none; }
+  html { scroll-behavior: smooth; }
+
+  /* Offres cliquables */
+  .card[data-cal] { cursor:pointer; }
+  .card[data-cal]:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative; min-height:62vh;
+    display:grid; place-items:center; text-align:left; overflow:hidden;
+    border-bottom:1px solid rgba(0,0,0,.08);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(246,239,232,0), rgba(246,239,232,.6) 60%, var(--beige) 100%);
+    pointer-events:none;
+  }
+  .hero .bg{ position:absolute; inset:0; background-size:cover; background-position:center; filter:saturate(1.05) contrast(1.02) }
+  .hero .card{
+    position:relative; z-index:1; background:rgba(255,255,255,.82); backdrop-filter:blur(8px);
+    border:1px solid rgba(0,0,0,.06); border-radius:24px; padding:28px; box-shadow:var(--shadow); max-width:560px;
+  }
+  .tag{ display:inline-block; font-size:12px; padding:4px 10px; border-radius:999px; background:#fff; border:1px solid rgba(0,0,0,.08) }
+  .mega{ font-weight:800; line-height:1.15; font-size:clamp(32px,5vw,48px); margin:0 0 8px }
+  .sub{ margin:0 0 16px; color:#4b403d }
+  .hero .grid{ display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  @media (max-width:560px){ .hero .card{ padding:20px; border-radius:18px } }
+
+  /* ===== Sections génériques ===== */
+  .wrap{ max-width:var(--container); margin:0 auto; padding:24px }
+  .grid-3{ display:grid; gap:16px; grid-template-columns:repeat(3, 1fr) }
+  @media (max-width:900px){ .grid-3{ grid-template-columns:repeat(2,1fr) } }
+  @media (max-width:600px){ .grid-3{ grid-template-columns:1fr } }
+
+  .card{
+    background:#fff; border:1px solid rgba(0,0,0,.06);
+    border-radius:16px; padding:16px; box-shadow:var(--shadow);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    cursor:pointer;
+  }
+  @media (hover:hover){
+    .card:hover{
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 16px 50px rgba(163,77,87,0.25);
+      border-color: var(--accent);
+    }
+  }
+  .card:active{
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 6px 20px rgba(163,77,87,0.2);
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.95);
+  }
+
+  /* ===== Modal (tirage) ===== */
+  .modal{ position:fixed; inset:0; z-index:2000; display:none }
+  .modal[open]{ display:grid; place-items:center }
+  .modal__overlay{ position:absolute; inset:0; background:rgba(0,0,0,.45); backdrop-filter: blur(2px) }
+  .modal__panel{
+    position:relative; background:var(--beige);
+    width:min(96vw, 1100px); max-height:92vh;
+    border:1px solid rgba(0,0,0,.08); border-radius:20px; box-shadow:var(--shadow);
+    overflow:hidden; display:flex; flex-direction:column;
+  }
+  .modal__head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); background:#fff7 }
+  .modal__title{ margin:0; font-weight:800 }
+  .modal__close{
+    appearance:none; border:1px solid rgba(0,0,0,.12); background:#fff; border-radius:10px;
+    padding:6px 10px; font-weight:700; cursor:pointer; box-shadow:var(--shadow);
+  }
+  .modal__content{ padding:12px 16px; overflow:auto }
+  .modal__content .wrap{ max-width:unset; padding:0 }
+
+  /* ===== Tirage IA (styles internes) ===== */
+  #tirage-ia{ max-width:var(--container); margin:0 auto; padding:24px }
+  #tirage-ia h2{ margin:0 0 12px; font-weight:800 }
+
+  #tirage-ia .themes{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 8px; }
+  #tirage-ia .themes .theme{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:8px 12px; border-radius:999px; background:#fff;
+    border:1px solid rgba(0,0,0,.12); box-shadow:var(--shadow); font-weight:600; cursor:pointer;
+  }
+  #tirage-ia .themes .theme.active{ border-color:var(--accent); box-shadow: inset 0 0 0 1px var(--accent) }
+
+  #tirage-ia .theme-selected{ margin:4px 0 8px; font-weight:700; font-size:14px; }
+  #tirage-ia .theme-selected .pill{
+    display:inline-block; padding:6px 10px; border-radius:999px; background:#fff;
+    border:1px solid var(--accent); box-shadow:var(--shadow); color:#4b403d;
+  }
+
+  #tirage-ia .theme-question{
+    margin:6px 0 10px; background:#fff; border:1px solid rgba(0,0,0,.08);
+    border-radius:12px; padding:10px; box-shadow:var(--shadow);
+  }
+  #tirage-ia .theme-question .q-label{ display:block; font-weight:700; font-size:14px; margin-bottom:6px; color:#4b403d; }
+  #tirage-ia .theme-question textarea{
+    width:100%; border:1px solid rgba(0,0,0,.12); border-radius:10px; padding:8px 10px;
+    font:inherit; resize:vertical; min-height:64px; outline:none; background:#fff;
+  }
+  #tirage-ia .theme-question textarea:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(163,77,87,.12); }
+  #tirage-ia .theme-question .q-tools{
+    display:flex; align-items:center; justify-content:space-between; margin-top:6px;
+  }
+  #tirage-ia .theme-question .q-clear{
+    appearance:none; background:#fff; border:1px solid rgba(0,0,0,.12);
+    border-radius:999px; padding:6px 10px; font-weight:600; cursor:pointer;
+  }
+  #tirage-ia .theme-question .q-clear:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+
+  #tirage-ia .modes{ display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 12px }
+  #tirage-ia .modes .mode{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:8px 12px; border-radius:999px; background:#fff;
+    border:1px solid rgba(0,0,0,.12); box-shadow:var(--shadow); font-weight:600;
+  }
+  #tirage-ia .modes .mode.active{ border-color:var(--accent); box-shadow: inset 0 0 0 1px var(--accent) }
+  #tirage-ia .modes .mode[disabled]{ opacity:.55; pointer-events:none; }
+
+  #tarot-grid.grid{ display:grid; gap:12px; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)) }
+  #tarot-grid.grid.disabled{ opacity:.55; cursor:not-allowed; }
+
+  .tarot-card{ position:relative; border:0; padding:0; background:none; cursor:pointer; perspective:800px }
+  .tarot-card .flip{ position:relative; width:100%; aspect-ratio:2/3; transform-style:preserve-3d; transition: transform .5s ease }
+  .tarot-card[data-flipped="1"] .flip{ transform: rotateY(180deg) }
+  .tarot-card .side{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; overflow:hidden;
+    border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow);
+  }
+  .tarot-card .side.front{ transform: rotateY(180deg) }
+
+  .tarot-card .side img,
+  #api-picks .result-card-inner img{ width:100%; height:100%; object-fit:contain; background:#fff; display:block; }
+
+  #api-picks{
+    display:flex; justify-content:center; align-items:flex-start;
+    gap:12px; margin-top:clamp(12px, 2vw, 24px); overflow-x:auto; padding-bottom:4px; width:100%;
+  }
+  #api-picks .result-card{ box-sizing:border-box; display:flex; flex-direction:column; align-items:center; flex:0 0 var(--pick-w, 96px); width:var(--pick-w, 96px) }
+  #api-picks .result-card-inner{
+    width:100%; aspect-ratio:2/3; overflow:hidden; border-radius:10px;
+    border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow); background:#fff;
+  }
+  #api-picks .pick-tag{ margin-bottom:6px; text-align:center; font:700 12px/1.2 Inter,system-ui,sans-serif; color:var(--accent) }
+  #api-picks .pick-kw{ margin-top:6px; text-align:center; font-weight:700; font-size:11px; line-height:1.25; color:#6b5f5a }
+  #api-picks .pick-kw span{ display:block }
+
+  #ia-reading{ max-width:var(--container); margin:0 auto; padding:24px }
+  #ia-reading .card{ background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:16px; padding:16px; box-shadow:var(--shadow) }
+
+  /* ===== Newsletter ===== */
+  #newsletter .card{ display:grid; grid-template-columns: 120px 1fr; gap:16px; align-items:center; }
+  #newsletter .thumb{ width:100%; aspect-ratio:1/1; border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,.06); box-shadow:var(--shadow); background:#fff; }
+  #newsletter .thumb img{ width:100%; height:100%; object-fit:cover; }
+  @media (max-width:640px){ #newsletter .card{ grid-template-columns:1fr } }
+</style>
+
+  
+</head>
+
+<body>
+
+  <!-- ===== Bandeau ===== -->
+  <header class="topbar">
+    <div class="topbar__row">
+      <a class="brand" href="/" aria-label="Accueil – l’Œil d’Opanoma">
+        <img src="/assets/img/hero/logo-opanoma.png" alt="Logo l’Œil d’Opanoma">
+        <span class="brand__name">l’Œil d’Opanoma</span>
+      </a>
+      <nav class="nav" aria-label="Navigation principale">
+        <a class="btn" href="#choisir">Choisir</a>
+        <a class="btn" href="#reserver">Réserver</a>
+        <a class="btn nav__week" href="#newsletter">Carte de la semaine</a>
+      </nav>
+      <div class="socials" aria-label="Réseaux sociaux">
+        <a class="icon" href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+          </svg>
+        </a>
+        <a class="icon" href="https://www.etsy.com/fr/shop/Loeildopanoma" target="_blank" rel="noopener" aria-label="Etsy">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="4" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M8 7h8v2H10v3h5v2h-5v3h6v2H8V7Z" fill="currentColor"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero" id="top">
+    <div class="bg" style="background-image:url('/assets/img/hero/01.png'), linear-gradient(120deg,#e8d8cf,#f6efe8);"></div>
+    <div class="hero-center">
+      <div class="card">
+        <p class="tag">Expérience IA</p>
+        <h1 class="mega">Amusez-vous à découvrir les cartes grâce à l’IA&nbsp;!</h1>
+        <p class="sub">Le tirage par l’IA doit être considéré comme un jeu.</p>
+        <div class="grid">
+          <a class="btn" href="#" data-open-modal="tirage-modal">Un tirage&nbsp;?</a>
+          <a class="btn" href="#choisir">La vraie Guidance, c'est là&nbsp;!</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Offres ===== -->
+  <section class="wrap" id="choisir">
+    <h2 class="section-title">Offres &amp; tarifs</h2>
+    <div class="grid-3">
+      <div class="card" data-cal="question-unique-15min">
+        <h3>Question Unique</h3>
+        <p class="price">15&nbsp;€</p>
+        <ul class="meta">
+          <li>Réponse rapide (– de 15&nbsp;min)</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +5&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="guidance-30min">
+        <h3>Guidance 30 min</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Clarification + tirage</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +5&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="guidance-60min">
+        <h3>Guidance 60 min</h3>
+        <p class="price">60&nbsp;€ <small>(60&nbsp;min)</small></p>
+        <ul class="meta">
+          <li>Exploration approfondie</li>
+          <li>Uniquement par téléphone</li>
+          <li>L'intégrale en PDF +10&nbsp;€</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="soin-energetique-60min">
+        <h3>Soin énergétique (présentiel)</h3>
+        <p class="price">60&nbsp;€ <small>(60&nbsp;min)</small></p>
+        <ul class="meta">
+          <li>À domicile (zone à préciser)</li>
+          <li>Rendez-vous sur demande</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="pendule-distance-30min">
+        <h3>Pendule à distance</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Énergétique à distance</li>
+          <li>Compte-rendu bref</li>
+          <li>Livraison sous 24&nbsp;h</li>
+        </ul>
+      </div>
+      <div class="card" data-cal="deblocage-pendule-30min">
+        <h3>Déblocage (pendule)</h3>
+        <p class="price">30&nbsp;€</p>
+        <ul class="meta">
+          <li>Travail ciblé</li>
+          <li>À distance</li>
+          <li>Livraison sous 24&nbsp;h</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Avis ===== -->
+  <section class="wrap" id="avis" aria-labelledby="avis-title">
+    <h2 id="avis-title" class="section-title">Avis sur Opanoma</h2>
+    <div class="grid-3">
+      <div class="card">
+        <p style="margin:0 0 8px">✨ “J’ai adoré mon tirage, il est tombé pile quand j’en avais besoin !”</p>
+        <p style="margin:0;font-weight:600">C. 36 ans</p>
+        <a href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Instagram</a>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 8px">🔮 “Commande parfaite et guidance très douce, merci infiniment.”</p>
+        <p style="margin:0;font-weight:600">M. 51 ans</p>
+        <a href="https://www.etsy.com/fr/shop/Loeildopanoma#reviews" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Etsy</a>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 8px">🌙 “Chaque guidance m’apporte une clarté nouvelle et une énergie positive.”</p>
+        <p style="margin:0;font-weight:600">J. 21 ans</p>
+        <a href="https://www.instagram.com/loeil_dopanoma/" target="_blank" rel="noopener" class="btn" style="margin-top:10px">Voir sur Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Réserver ===== -->
+  <section class="wrap" id="reserver" aria-labelledby="reserver-title">
+    <h2 id="reserver-title" class="section-title">Réserver</h2>
+    <div class="card">
+      <div class="embed-wrap">
+        <iframe id="calframe" src="about:blank" title="Réservation — l’Œil d’Opanoma" loading="lazy" allow="microphone; camera"></iframe>
+      </div>
+    </div>
+  </section>
+ 
+
+  <!-- ===== Script Cal.com ===== -->
+  <script>
+  (function(){
+    const CAL_MAP = {
+      'question-unique-15min'  : 'https://cal.com/christophe-sebille-yps3zm/question-unique-15min',
+      'guidance-30min'         : 'https://cal.com/christophe-sebille-yps3zm/guidance-30',
+      'guidance-60min'         : 'https://cal.com/christophe-sebille-yps3zm/guidance-60',
+      'soin-energetique-60min' : 'https://cal.com/christophe-sebille-yps3zm/soin-energetique',
+      'pendule-distance-30min' : 'https://cal.com/christophe-sebille-yps3zm/pendule',
+      'deblocage-pendule-30min': 'https://cal.com/christophe-sebille-yps3zm/deblocage',
+    };
+    const frame    = document.getElementById('calframe');
+    const reserver = document.getElementById('reserver');
+    function currentMonthStr(d = new Date()){ return d.toISOString().slice(0,7); }
+    function openCal(slug){
+      const base = CAL_MAP[slug]; if (!base) return;
+      const url = new URL(base);
+      url.searchParams.set('theme','light');
+      url.searchParams.set('hide_event_type_details','true');
+      url.searchParams.set('overlayCalendar','true');
+      url.searchParams.set('month', currentMonthStr());
+      if (frame) frame.src = url.toString();
+      if (reserver) { reserver.style.display = 'block'; reserver.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    }
+    document.querySelectorAll('#choisir .card[data-cal]').forEach(card=>{
+      card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+      card.addEventListener('click', ()=> openCal(card.dataset.cal));
+      card.addEventListener('keydown', (e)=>{ if (e.key==='Enter'||e.key===' '){ e.preventDefault(); openCal(card.dataset.cal); }});
+    });
+    console.log('[CAL] cartes détectées =', document.querySelectorAll('#choisir .card[data-cal]').length);
+  })();
+  </script>
+
+  <!-- ===== Modal Tirage ===== -->
+  <div class="modal" id="tirage-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tirage-modal-title">
+    <div class="modal__overlay" data-close="modal"></div>
+    <div class="modal__panel" role="document">
+      <div class="modal__head">
+        <h3 class="modal__title" id="tirage-modal-title">Tirage des cartes</h3>
+        <button class="modal__close" type="button" data-close="modal">Fermer</button>
+      </div>
+      <div class="modal__content">
+        <section id="tirage-ia" aria-labelledby="ia-title">
+          <h2 id="ia-title">L’IA vous tire les cartes</h2>
+          <div class="card">
+
+            <!-- Thèmes -->
+            <div class="themes" role="group" aria-label="Thème du tirage">
+              <button class="theme" data-theme="santé"   type="button">Santé</button>
+              <button class="theme" data-theme="amour"   type="button">Amour</button>
+              <button class="theme" data-theme="argent"  type="button">Argent</button>
+              <button class="theme" data-theme="travail" type="button">Travail</button>
+            </div>
+
+            <div id="theme-selected" class="theme-selected" aria-live="polite" hidden>
+              <span class="pill">Thème&nbsp;: —</span>
+            </div>
+
+            <div id="theme-question" class="theme-question" hidden aria-live="polite">
+              <label for="user-question" class="q-label">Votre question (optionnel)</label>
+              <textarea id="user-question" rows="2" maxlength="200" placeholder="Votre question…"></textarea>
+              <div class="q-tools">
+                <small id="q-counter">0/200</small>
+                <button type="button" id="q-clear" class="q-clear">Effacer</button>
+              </div>
+            </div>
+
+            <!-- Modes -->
+            <div class="modes" role="group" aria-label="Mode de tirage">
+              <button class="mode" data-mode="3" type="button">3 cartes</button>
+              <button class="mode" data-mode="5" type="button">5 cartes (en croix)</button>
+            </div>
+
+            <!-- Grille + bande -->
+            <div id="tarot-grid" class="grid" role="list" aria-label="22 cartes, choisissez-en une"></div>
+            <div id="api-picks" aria-live="polite" aria-label="Résultat du tirage"></div>
+
+          </div>
+        </section>
+
+        <!-- ===== Interprétation ===== -->
+<section id="ia-reading" aria-labelledby="read-title" class="wrap" style="margin-top:12px">
+  <div class="card">
+    <h2 id="read-title">Interprétation du tirage</h2>
+    <div id="reading-output" aria-live="polite">
+      Choisissez un thème, posez votre question (optionnel), puis choisissez 3 ou 5 cartes.
+    </div>
+
+  </div>
+</section>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+(function(){
+  "use strict";
+
+/* ================== CONFIG ================== */
+const BUILD_VERSION = '20250901';
+const VERSION = (location.hostname === 'localhost' || location.hostname.startsWith('127.'))
+  ? String(Date.now())
+  : BUILD_VERSION;
+
+const BACK_SRC  = `/assets/img/tarot/verso.webp?v=${VERSION}`;
+const FACE_BASE = "/assets/img/tarot/majors";
+
+/* ===== ENDPOINTS (déclarés une seule fois) ===== */
+(function setEndpoints(){
+  const PROD = 'https://opanoma.fr';
+  window.API_URL   = window.API_URL   || (PROD + '/api/tarot/summarize/index.php'); // interprétation
+  window.TRACK_URL = window.TRACK_URL || (PROD + '/api/tarot/track/index.php');     // journalisation
+  window.TAROT_API_URL = window.API_URL; // pour tests console
+})();
+
+/* ================== DONNÉES ================== */
+const TAROT_FACES = [
+  { n:0,  slug:"00-le-mat.webp", label:"Le Mat" },
+  { n:1,  slug:"01-le-bateleur.webp", label:"Le Bateleur" },
+  { n:2,  slug:"02-la-papesse.webp", label:"La Papesse" },
+  { n:3,  slug:"03-limperatrice.webp", label:"L’Impératrice" },
+  { n:4,  slug:"04-lempereur.webp", label:"L’Empereur" },
+  { n:5,  slug:"05-le-pape.webp", label:"Le Pape" },
+  { n:6,  slug:"06-lamoureux.webp", label:"L’Amoureux" },
+  { n:7,  slug:"07-le-chariot.webp", label:"Le Chariot" },
+  { n:8,  slug:"08-la-justice.webp", label:"La Justice" },
+  { n:9,  slug:"09-lhermite.webp", label:"L’Hermite" },
+  { n:10, slug:"10-la-roue-de-fortune.webp", label:"La Roue de Fortune" },
+  { n:11, slug:"11-la-force.webp", label:"La Force" },
+  { n:12, slug:"12-le-pendu.webp", label:"Le Pendu" },
+  { n:13, slug:"13-larcane-sans-nom.webp", label:"Arcane sans nom" },
+  { n:14, slug:"14-temperance.webp", label:"Tempérance" },
+  { n:15, slug:"15-le-diable.webp", label:"Le Diable" },
+  { n:16, slug:"16-la-maison-dieu.webp", label:"La Maison Dieu" },
+  { n:17, slug:"17-letoile.webp", label:"L’Étoile" },
+  { n:18, slug:"18-la-lune.webp", label:"La Lune" },
+  { n:19, slug:"19-le-soleil.webp", label:"Le Soleil" },
+  { n:20, slug:"20-le-jugement.webp", label:"Le Jugement" },
+  { n:21, slug:"21-le-monde.webp", label:"Le Monde" }
+];
+
+const KW = {
+  0:["liberté","spontanéité","aventure"], 1:["début","potentiel","action"], 2:["intuition","secret","patience"],
+  3:["créativité","expression","fertilité"], 4:["stabilité","structure","autorité"], 5:["guidance","tradition","enseignement"],
+  6:["choix","union","valeurs"], 7:["volonté","victoire","déplacement"], 8:["équilibre","vérité","responsabilité"],
+  9:["recherche","introspection","prudence"], 10:["changement","cycle","opportunité"], 11:["courage","maîtrise","compassion"],
+  12:["lâcher-prise","perspective","pause"], 13:["transformation","fin","renaissance"], 14:["harmonie","modération","alchimie"],
+  15:["attachement","tentation","énergie brute"], 16:["révélation","rupture","libération"], 17:["espoir","inspiration","guérison"],
+  18:["émotions","illusion","subconscient"], 19:["succès","vitalité","clarté"], 20:["appel","éveil","bilan"],
+  21:["accomplissement","intégration","ouverture"]
+};
+
+/* ================== UTILITAIRES ================== */
+const q  = (sel, root=document) => root.querySelector(sel);
+const qa = (sel, root=document) => root.querySelectorAll(sel);
+const numFor = (card)=> (card && typeof card.n==='number') ? card.n : (card && card.slug ? +card.slug.slice(0,2) : null);
+const shuffle = (a)=>{ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+const POS3 = ['Passé','Présent','Futur'];
+const POS5 = ['Pour','Contre','Synthèse','Évolution','Issue'];
+const positionsForMode = (m)=> (parseInt(m,10) === 5 ? POS5 : POS3);
+
+// Indication explicite (structure demandée au modèle)
+function layoutInstruction(mode){
+  return (parseInt(mode,10) === 5)
+    ? "Format strict: Pour · Contre · Synthèse · Évolution · Issue. Ne pas utiliser Passé/Présent/Futur."
+    : "Format strict: Passé · Présent · Futur.";
+}
+
+// Préférer le contenu du modal si ouvert
+function inModal(sel){
+  const modal = q('#tirage-modal');
+  return (modal && q(sel, modal)) ? q(sel, modal) : q(sel);
+}
+
+// ---------- SCROLL HELPERS ----------
+function getScrollParent(el){
+  let p = el ? el.parentElement : null;
+  while (p){
+    const st = getComputedStyle(p);
+    const oy = st.overflowY;
+    if ((oy === 'auto' || oy === 'scroll') && p.scrollHeight > p.clientHeight) return p;
+    p = p.parentElement;
+  }
+  return q('#tirage-modal .modal__content') || document.scrollingElement || document.documentElement;
+}
+function smoothScrollTo(container, top){
+  try { container.scrollTo({ top, behavior:'smooth' }); }
+  catch (e) { container.scrollTop = top; }
+}
+function scrollReadingIntoView(align='center'){
+  const out = q('#reading-output'); if (!out) return;
+  const container = getScrollParent(out);
+
+  const cRect = container.getBoundingClientRect();
+  const oRect = out.getBoundingClientRect();
+  const margin = 16;
+
+  let target = container.scrollTop + (oRect.top - cRect.top) - margin;
+  if (align === 'center'){
+    const h = Math.min(oRect.height, cRect.height);
+    target = container.scrollTop + (oRect.top - cRect.top) - (cRect.height/2 - h/2);
+  } else if (align === 'end'){
+    target = container.scrollTop + (oRect.bottom - cRect.bottom) + margin;
+  }
+  smoothScrollTo(container, target);
+
+  if (out.scrollHeight > out.clientHeight){
+    try { out.scrollTo({ top: out.scrollHeight, behavior:'smooth' }); }
+    catch (e) { out.scrollTop = out.scrollHeight; }
+  }
+}
+
+
+
+
+/* ================== THÈMES ================== */
+const THEME_PROMPTS = {
+  amour  : "Concentre l’interprétation sur les dynamiques relationnelles (sentiments, alignement des valeurs, communication, ouverture au lien).",
+  santé  : "Adopte un angle bien-être/énergie/rythme. Reste généraliste, pas de conseil médical.",
+  argent : "Concentre-toi sur opportunités/gestion/valeur/échanges; prudence et réalisme.",
+  travail: "Parle de mission, posture pro, compétences, collaborations et trajectoire."
+};
+
+// ========= Source de vérité unique pour la question =========
+function getQuestionStrict(){
+  // on privilégie le textarea du modal s'il est présent
+  const el = document.querySelector('#tirage-modal #user-question')
+          || document.querySelector('#user-question');
+  return (el && typeof el.value === 'string') ? el.value.trim() : '';
+}
+
+function escapeHTML(s){
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+function sanitizeInterpretationText(raw, inputs){
+  // A) nettoie d'abord le TEXTE BRUT (pas encore d'HTML)
+  let txt = String(raw || '');
+
+  // supprime (#3)
+  txt = txt.replace(/\(#\d+\)/g, '');
+
+  // supprime **gras** markdown
+  txt = txt.replace(/\*\*(.*?)\*\*/g, '$1');
+
+  // supprime UNIQUEMENT un point de puce "• " ou un tiret "-" AU DÉBUT DE LIGNE
+  // (et seulement l’espace qui suit), sans toucher le reste
+  txt = txt.replace(/^[\t ]*[•]\s+/gm, '');
+  txt = txt.replace(/^[\t ]*-\s+/gm, '');
+
+  // B) échappe pour sécurité
+  let html = escapeHTML(txt);
+
+  // C) mets en <strong> les noms de cartes (après échappement)
+  const cards = inputs?.cards || [];
+  for (const c of cards){
+    const name = c?.name?.trim();
+    if (!name) continue;
+    // nom échappé tel qu'il apparaît dans 'html'
+    const nameEsc = escapeHTML(name);
+    const re = new RegExp(`\\b${nameEsc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g');
+    html = html.replace(re, `<strong>${nameEsc}</strong>`);
+  }
+
+  return html;
+}
+
+
+
+
+
+// Effet machine à écrire qui respecte le HTML (balises conservées)
+window.typeWriterHTML = function typeWriterHTML(
+  el,
+  html,
+  speed = 20,
+  done,
+  scroller = document.querySelector('#reading-output')
+){
+  if (!el) return;
+
+  // 1) Parser le HTML source
+  const parsed = document.createElement('div');
+  parsed.innerHTML = html;
+
+  // 2) Désactive le smooth le temps de l'animation (pour les scrollTop successifs)
+  let restoreBehavior = null;
+  if (scroller) {
+    const cs = getComputedStyle(scroller).scrollBehavior;
+    if (cs === 'smooth') {
+      restoreBehavior = scroller.style.scrollBehavior;
+      scroller.style.scrollBehavior = 'auto';
+    }
+  }
+
+  // 3) Prépare la structure DOM "vide" et une file des TEXT_NODE à remplir
+  el.innerHTML = '';
+  const queue = []; // { outParent: Node, text: string }
+
+  function collect(node, outParent){
+    if (node.nodeType === Node.TEXT_NODE){
+      queue.push({ outParent, text: node.nodeValue || '' });
+      return;
+    }
+    if (node.nodeType === Node.ELEMENT_NODE){
+      const shell = node.cloneNode(false); // balise sans enfants
+      outParent.appendChild(shell);
+      node.childNodes.forEach(child => collect(child, shell));
+    }
+  }
+
+  // Racine : on clone la structure sans textes
+  const frag = document.createDocumentFragment();
+  parsed.childNodes.forEach(n => collect(n, frag));
+  el.appendChild(frag);
+
+  // 4) Remplissage progressif des textes (caractère par caractère)
+  let qi = 0;
+  let currentNode = null;
+  let idx = 0;
+
+  function nextTextNode(){
+    if (qi >= queue.length){
+      if (scroller && restoreBehavior !== null) scroller.style.scrollBehavior = restoreBehavior;
+      if (typeof done === 'function') done();
+      return;
+    }
+    const item = queue[qi++];
+    currentNode = document.createTextNode('');
+    item.outParent.appendChild(currentNode);
+    idx = 0;
+    tick(item.text);
+  }
+
+  function tick(textStr){
+    if (idx < textStr.length){
+      currentNode.nodeValue += textStr.charAt(idx++);
+      if (scroller) scroller.scrollTop = scroller.scrollHeight; // suivre la fin
+      setTimeout(() => tick(textStr), speed);
+    } else {
+      nextTextNode();
+    }
+  }
+
+  // Démarrage
+  nextTextNode();
+};
+
+
+
+
+
+
+
+/* ================== ÉTAT ================== */
+const S = { mode:null, limit:0, flips:0, selected:[], theme:null, question:'' };
+
+/* ================== RENDU PICKS ================== */
+function syncPickWidth(){
+  const gridCard = inModal('#tarot-grid .tarot-card .flip') || inModal('#tarot-grid .tarot-card');
+  const host = inModal('#api-picks');
+  if (!gridCard || !host) return;
+  const w = Math.round(gridCard.getBoundingClientRect().width);
+  if (w>0) host.style.setProperty('--pick-w', w+'px');
+}
+function renderPicks(){
+  const host = inModal('#api-picks');
+  if (!host) return;
+  host.innerHTML = '';
+  const pos = positionsForMode(S.mode);
+  (S.selected || []).forEach((c,i)=>{
+    const wrap  = document.createElement('div');
+    wrap.className = 'result-card';
+    const tag = document.createElement('div');
+    tag.className = 'pick-tag';
+    tag.textContent = pos?.[i] || ('Carte ' + (i+1));
+    const inner = document.createElement('div');
+    inner.className = 'result-card-inner';
+    const img = new Image();
+    img.src = `${FACE_BASE}/${c.slug}?v=${VERSION}`;
+    img.alt = c.label || '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    inner.appendChild(img);
+    const kw = document.createElement('div');
+    kw.className = 'pick-kw';
+    (KW[numFor(c)] || []).forEach(w=>{ const sp = document.createElement('span'); sp.textContent = w; kw.appendChild(sp); });
+    wrap.appendChild(tag); wrap.appendChild(inner); wrap.appendChild(kw);
+    host.appendChild(wrap);
+  });
+  syncPickWidth();
+}
+
+/* ================== INTERPRÉTATION ================== */
+function showReading(){ const sec = q('#ia-reading'); if (sec) sec.hidden = false; }
+function hideReading(){ const sec = q('#ia-reading'); const out = q('#reading-output'); if (out) out.textContent=''; if (sec) sec.hidden = true; }
+
+function ensureResetButton(){
+  const wrap = q('#ia-reading .card'); if (!wrap) return;
+  let btn = q('#reset-draw');
+  if (!btn){
+    btn = document.createElement('button');
+    btn.id = 'reset-draw';
+    btn.type = 'button';
+    btn.className = 'btn';
+    btn.textContent = 'Réinitialiser';
+    btn.addEventListener('click', handleResetClick);
+    wrap.appendChild(btn);
+  }
+}
+function setResetButtonVisibility(show){
+  const btn = q('#reset-draw'); if (btn) btn.style.display = show ? '' : 'none';
+}
+function handleResetClick(){
+  hideReading();
+  setResetButtonVisibility(false);
+  if (typeof resetSelectionAndGrid === 'function') resetSelectionAndGrid();
+  else {
+    const grid = q('#tarot-grid');
+    if (grid){
+      grid.querySelectorAll('.tarot-card').forEach(card=>{ card.removeAttribute('data-flipped'); card.classList.remove('over-limit'); });
+      grid.classList.remove('disabled');
+    }
+    const picks = q('#api-picks'); if (picks) picks.innerHTML = '';
+    S.flips = 0; S.selected = [];
+  }
+}
+
+// Préambule unique (thème + question + instruction de layout)
+function buildPreamble(theme, question, mode){
+  const qq = (question || '').trim();
+  const angle  = THEME_PROMPTS[theme] || "Reste généraliste et bienveillant; pas de conseil médical/financier.";
+  const layout = layoutInstruction(mode);
+  const qLine  = qq
+    ? `Question utilisateur : « ${qq} ». Réponds explicitement en fonction de cette question.`
+    : "Pas de question fournie; reste concrète et utile.";
+  const style  = "Ton empathique et concret, pas de fatalisme; termine par une synthèse et un conseil pratique.";
+  return `${layout} ${angle} ${qLine} ${style}`;
+}
+
+
+
+
+
+
+
+
+// ===== Interprétation : version minimale, fiable =====
+window.Interpretation = (() => {
+  const API = () => window.API_URL || 'https://opanoma.fr/api/tarot/summarize/index.php';
+  const out = () => document.querySelector('#reading-output');
+
+  function payloadFor({ theme, question, mode, cards }) {
+    const POS3 = ['Passé', 'Présent', 'Futur'];
+    const POS5 = ['Pour', 'Contre', 'Synthèse', 'Évolution', 'Issue'];
+    const positions = (parseInt(mode, 10) === 5) ? POS5 : POS3;
+
+    return {
+      theme: theme || 'général',
+      mode: parseInt(mode, 10),
+      positions,
+      cards: (cards || []).map((c, i) => ({
+        position: positions[i] || `Carte ${i + 1}`,
+        name: c.label,
+        number: c.n
+      })),
+      user: { question: (question || '').trim() } // ← unique source
+    };
+  }
+
+  async function run(opts) {
+  const el = out();
+  if (!el) return;
+
+  el.innerHTML = `<div class="loader"><span class="spinner"></span> Interprétation en cours…</div>`;
+  
+  // Recalage de scroll après insertion du loader
+requestAnimationFrame(() => {
+  // Option A: utilise ton helper
+  if (typeof scrollReadingIntoView === 'function') {
+    scrollReadingIntoView('start');
+  } else {
+    // Option B: fallback sans helper
+    const cont = document.querySelector('#tirage-modal .modal__content');
+    if (cont) cont.scrollTo({ top: 0, behavior: 'smooth' });
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {}
+  }
+
+  // Accessibilité: focalise la zone (sans re-scroller)
+  try { el.setAttribute('tabindex','-1'); el.focus({ preventScroll: true }); } catch {}
+});
+
+  const payload = payloadFor(opts);
+  const json = JSON.stringify(payload);
+  const api = API();
+  const url = api + (api.includes('?') ? '&' : '?') + 't=' + Date.now();
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: json
+    });
+
+    const raw = await res.text();
+    if (!res.ok) throw new Error(`HTTP ${res.status} — ${raw.slice(0,200)}`);
+
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error('Réponse non-JSON: ' + raw.slice(0, 200)); }
+
+   const text   = data.text || data.result || data.answer || data.message || '';
+   console.log('[INTERP text brut]', text);
+const inputs = data?.data?.inputs ?? null;
+const meta   = data?.data?.meta   ?? null;
+
+// --- Affichage (header + conteneur pour le typewriter HTML) ---
+const src  = meta?.source === 'llm' ? 'IA' : (meta?.source || 'inconnu').toUpperCase();
+const when = meta?.server_time_utc || '';
+
+el.innerHTML = `
+  <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+    <span style="padding:4px 8px;border-radius:999px;border:1px solid #ddd;background:#fff;font-size:12px">
+      Source&nbsp;: ${escapeHTML(src)}
+    </span>
+    <span style="color:#666;font-size:12px">${escapeHTML(when)}</span>
+    ${meta?.draw_id ? `<code style="margin-left:auto;font-size:12px;opacity:.8">#${escapeHTML(String(meta.draw_id))}</code>` : ``}
+  </div>
+
+  <h2 style="margin:.2rem 0 0.6rem">Interprétation</h2>
+  <div id="interp-text" style="white-space:pre-wrap; line-height:1.6"></div>
+`;
+
+// Texte nettoyé (supprime **, (#3), puces) + met les noms de cartes en <strong>
+const clean    = sanitizeInterpretationText(text, inputs);
+
+// Effet machine à écrire qui respecte le HTML
+const target   = q('#interp-text');
+const scroller = q('#reading-output'); // ou q('#tirage-modal .modal__content') selon ton choix
+typeWriterHTML(target, clean || '(pas de texte)', 20, null, scroller);
+
+// Amène la zone en vue
+try { el.scrollIntoView({ behavior:'smooth', block:'start' }); } catch {}
+
+
+
+
+
+
+    // --- Stockage interne (pas visible) ---
+    window.SESSION = window.SESSION || {};
+    window.SESSION.result = { text, inputs, meta };
+
+    try { if (typeof ensureToolsBar === 'function') ensureToolsBar(); } catch {}
+    try { if (typeof sendAnonymousBeacon === 'function') sendAnonymousBeacon(); } catch {}
+
+    // Si tu ne veux rien d'autre, ne déclenche pas d'évènement ni de bandeau ici.
+  } catch (e) {
+    console.error('[INTERP] error', e);
+    el.textContent = "Impossible de récupérer l’interprétation.\n\n" + (e.message || e);
+  }
+}
+
+
+
+  return { run };
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+function buildGrid(){
+  const grid = inModal('#tarot-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  const order = shuffle(TAROT_FACES.map((_,i)=>i));
+  order.forEach((idx, posi)=>{
+    const c = TAROT_FACES[idx];
+
+    const btn = document.createElement('button');
+    btn.className = 'tarot-card';
+    btn.type = 'button';
+    btn.setAttribute('role','listitem');
+    btn.setAttribute('aria-label','Carte face cachée ' + (posi+1));
+
+    const flip = document.createElement('div'); flip.className = 'flip';
+
+    const back = document.createElement('div'); back.className = 'side back';
+    const backImg = new Image(); backImg.alt = 'Dos de carte'; backImg.src = BACK_SRC; back.appendChild(backImg);
+
+    const front = document.createElement('div'); front.className = 'side front';
+    const face = new Image(); face.alt = c.label; face.src = `${FACE_BASE}/${c.slug}?v=${VERSION}`; front.appendChild(face);
+
+    flip.appendChild(back);
+    flip.appendChild(front);
+    btn.appendChild(flip);
+
+btn.addEventListener('click', () => {
+  // Garde-fous
+  if (!S.theme){
+    qa('#tirage-ia .themes .theme', q('#tirage-modal')).forEach(t =>
+      t.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}], {duration:220})
+    );
+    return;
+  }
+  if (!S.mode){
+    qa('#tirage-ia .modes .mode', q('#tirage-modal')).forEach(m =>
+      m.animate([{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'scale(1)'}], {duration:220})
+    );
+    return;
+  }
+  if (btn.dataset.flipped === '1') return;
+
+  // Si on est DÉJÀ au-delà/à la limite (clics supplémentaires) → feedback et on sort
+  if (S.flips >= S.limit){
+    btn.classList.add('over-limit');
+    setTimeout(() => btn.classList.remove('over-limit'), 450);
+    return;
+  }
+
+  // ---- Ce clic compte : on retourne la carte
+  btn.dataset.flipped = '1';
+  btn.setAttribute('aria-label', `${c.n} — ${c.label}`);
+  S.flips++;
+  S.selected.push(c);
+  renderPicks();
+
+  if (S.flips >= S.limit) {
+  // Affiche la zone de lecture si tu la caches ailleurs
+  showReading?.();
+
+  // Scroll vers la zone d’interpretation AVANT l’appel API
+  scrollReadingIntoView('start'); // ou 'center' si tu préfères
+
+  // Lance l’interprétation
+  window.Interpretation.run({
+    theme: S.theme,
+    question: (document.querySelector('#tirage-modal #user-question')?.value || '').trim(),
+    mode: S.mode,
+    cards: S.selected.slice()
+  });
+}
+
+});
+
+
+
+    grid.appendChild(btn);
+  });
+
+  // re-désactive par défaut tant que le mode n’est pas choisi
+  grid.classList.add('disabled');
+  requestAnimationFrame(syncPickWidth);
+}
+
+
+
+
+
+
+function resetSelectionAndGrid({ clearPicks = true } = {}){
+  const root = q('#tirage-modal');
+  const grid = q('#tarot-grid', root);
+  if (grid){
+    grid.querySelectorAll('.tarot-card').forEach(c=>{
+      c.removeAttribute('data-flipped');
+      c.classList.remove('over-limit');
+    });
+      }
+  S.flips = 0; S.selected = [];
+  if (clearPicks){
+    const host = q('#api-picks', root); if (host) host.innerHTML = '';
+  } else {
+    renderPicks();
+  }
+}
+
+/* ================== THÈME + QUESTION ================== */
+function setupTheme(){
+  const root = q('#tirage-modal'); if (!root) return;
+
+  const tbtns = qa('#tirage-ia .themes .theme', root);
+  const mbtns = qa('#tirage-ia .modes .mode', root);
+  const badge = q('#theme-selected', root);
+  const pill  = badge ? badge.querySelector('.pill') : null;
+
+  const qWrap = q('#theme-question', root);
+  const qTA   = q('#user-question', root);
+  const qCnt  = q('#q-counter', root);
+  const qClr  = q('#q-clear', root);
+
+  const THEME_EMO = { 'santé':'💚', 'amour':'💗', 'argent':'💰', 'travail':'💼' };
+  const PLACEHOLD = {
+    'amour'  : "Ex. Où va cette relation ?",
+    'santé'  : "Ex. Comment retrouver de l’énergie ?",
+    'argent' : "Ex. Quelle opportunité financière se présente ?",
+    'travail': "Ex. Comment évoluer dans mon poste ?"
+  };
+
+  if (!tbtns.length) return;
+
+  // désactive 3/5 au départ
+  mbtns.forEach(b=>{ b.disabled = true; b.setAttribute('aria-disabled','true'); });
+
+  function setTheme(val){
+    S.theme = val;
+    tbtns.forEach(b=> b.classList.toggle('active', b.dataset.theme === val));
+
+    if (badge && pill){
+      badge.hidden = false;
+      const label = val.charAt(0).toUpperCase() + val.slice(1);
+      pill.textContent = `Thème : ${label} ${THEME_EMO[val] || '✨'}`;
+    }
+    if (qWrap && qTA){
+      qWrap.hidden = false;
+      qTA.placeholder = PLACEHOLD[val] || "Votre question…";
+
+      // sync compteur (la source reste le DOM)
+      if (qCnt) qCnt.textContent = `${qTA.value.length}/${qTA.maxLength}`;
+      setTimeout(()=> qTA.focus(), 0);
+    }
+
+    // active 3/5
+    mbtns.forEach(b=>{ b.disabled = false; b.removeAttribute('aria-disabled'); });
+  }
+
+  tbtns.forEach(b=> b.addEventListener('click', ()=> setTheme(b.dataset.theme)));
+
+  if (qTA){
+    const syncCnt = ()=>{
+      if (qCnt) qCnt.textContent = `${qTA.value.length}/${qTA.maxLength}`;
+    };
+    qTA.addEventListener('input', syncCnt);
+    syncCnt();
+  }
+
+  if (qClr){
+    qClr.addEventListener('click', ()=>{
+      if (!qTA) return;
+      qTA.value = '';
+      if (qCnt) qCnt.textContent = `0/${qTA.maxLength}`;
+      qTA.focus();
+    });
+  }
+}
+
+/* ================== MODE (3 / 5) + FREEZE HELPERS ================== */
+function freezeGrid(){
+  const grid = q('#tarot-grid', q('#tirage-modal')) || q('#tarot-grid');
+  if (grid) grid.classList.add('disabled');
+}
+function unfreezeGrid(){
+  const grid = q('#tarot-grid', q('#tirage-modal')) || q('#tarot-grid');
+  if (grid) grid.classList.remove('disabled');
+}
+
+function setupModes(){
+  const btns = qa('#tirage-ia .modes .mode');
+  const grid = q('#tarot-grid');
+  if (!btns.length || !grid) return;
+
+  function setMode(val){
+    S.mode  = parseInt(val, 10);
+    S.limit = S.mode;
+    S.flips = 0;
+    S.selected = [];
+
+    const pos = positionsForMode(val);
+    const out = q('#reading-output');
+    if (out){
+      const list = pos.join(' · ');
+      out.classList.remove('loading');
+      out.innerHTML = `Mode ${S.mode} activé — Tirez ${S.mode} cartes (${list}).`;
+      setResetButtonVisibility(false);
+      scrollReadingIntoView('center');
+    }
+
+    // reset visuel
+    grid.querySelectorAll('.tarot-card').forEach(card=>{
+      card.removeAttribute('data-flipped');
+      card.classList.remove('over-limit');
+    });
+
+    // état UI
+    btns.forEach(b=> b.classList.toggle('active', b.dataset.mode === String(val)));
+
+    // déverrouille la grille
+    unfreezeGrid();
+
+    const picks = q('#api-picks'); if (picks) picks.innerHTML = '';
+    syncPickWidth();
+  }
+
+  btns.forEach(b=> b.addEventListener('click', ()=> setMode(b.dataset.mode)));
+}
+
+/* ================== BOOT (modal) ================== */
+let _booted = false;
+function startTarotInModal(){
+  if (_booted) return;
+  if (!q('#tirage-modal #tarot-grid')) return;
+
+  buildGrid();
+  setupTheme();
+  setupModes();
+  syncPickWidth();
+
+  // observers
+  const grid = q('#tarot-grid', q('#tirage-modal'));
+  if (grid && 'ResizeObserver' in window){ new ResizeObserver(syncPickWidth).observe(grid); }
+  const host = q('#api-picks', q('#tirage-modal'));
+  if (host && 'MutationObserver' in window){ new MutationObserver(syncPickWidth).observe(host, { childList:true }); }
+
+  _booted = true;
+}
+
+// expose minimal
+window.TAROT_UI = { boot: startTarotInModal, renderPicks };
+window.TAROT_API_URL = window.API_URL;
+
+/* ================== JOURNAL & OUTILS D’EXPORT ================== */
+window.SESSION = window.SESSION || {
+  id: String(Date.now()),
+  startedAt: new Date().toISOString(),
+  ua: navigator.userAgent,
+  locale: navigator.language || 'fr',
+  events: [],
+  result: null,
+  consent: localStorage.getItem('trackConsent') === '1'
+};
+
+function logEvent(type, data={}){
+  SESSION.events.push({
+    ts: new Date().toISOString(),
+    type,
+    data
+  });
+}
+
+function buildExportObject(){
+  const pos = positionsForMode(S.mode) || [];
+  return {
+    session: {
+      id: SESSION.id,
+      startedAt: SESSION.startedAt,
+      locale: SESSION.locale
+    },
+    user: {
+      theme: S.theme || null,
+      question: getQuestionStrict() || null   // ← DOM = source
+    },
+    draw: {
+      mode: S.mode,
+      positions: pos,
+      selected: (S.selected || []).map((c,i)=>({
+        position: pos[i] || `Carte ${i+1}`,
+        name: c.label,
+        number: c.n,
+        slug: c.slug,
+        keywords: KW[numFor(c)] || []
+      }))
+    },
+    interpretation: SESSION.result || null,
+    events: SESSION.events
+  };
+}
+
+function downloadJSON(obj, filename){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+
+
+async function postWithFallback(url, payload) {
+  // 1) JSON
+  try{
+    const r1 = await fetch(url, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Cache-Control':'no-cache' },
+      cache:'no-store',
+      body: JSON.stringify(payload)
+    });
+    const raw1 = await r1.text();
+    if (!r1.ok) throw new Error(`HTTP ${r1.status} — ${raw1.slice(0,200)}`);
+    let j1; try{ j1 = JSON.parse(raw1); }catch{ /* pas JSON, on verra fallback */ }
+    if (j1?.text) return j1.text;     // ✅ backend JSON OK
+    // si c’est du texte brut mais cohérent, prends-le
+    if (/Passé|Pour|Contre|Futur|Issue/.test(raw1)) return raw1;
+  }catch(e){ /* on va tenter form-data */ }
+
+  // 2) FormData
+  const fd = new FormData();
+  // déplie l’objet proprement
+  Object.entries(payload).forEach(([k, v])=>{
+    fd.append(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+  });
+
+  const r2 = await fetch(url, { method:'POST', body: fd, cache:'no-store' });
+  const raw2 = await r2.text();
+  if (!r2.ok) throw new Error(`HTTP ${r2.status} — ${raw2.slice(0,200)}`);
+  let j2; try{ j2 = JSON.parse(raw2); }catch{}
+  if (j2?.text) return j2.text;
+  return raw2; // dernier recours
+}
+
+
+
+async function copySummaryToClipboard(){
+  const out = q('#reading-output');
+  const text = out ? out.textContent.trim() : '';
+  if (!text) return alert('Rien à copier pour le moment.');
+  try {
+    await navigator.clipboard.writeText(text);
+    alert('Interprétation copiée dans le presse-papiers ✔');
+  } catch {
+    alert('Impossible de copier automatiquement. Sélectionnez le texte et copiez-le (Ctrl/Cmd+C).');
+  }
+}
+
+function ensureToolsBar(){ /* désactivé pour version publique */ }
+
+function sendAnonymousBeacon(){ /* tracking désactivé */ }
+
+/* ================== HOOKS ================== */
+(function hookThemes(){
+  const root = q('#tirage-modal');
+  root?.addEventListener('click', (e)=>{
+    const b = e.target.closest?.('.theme');
+    if (!b) return;
+    logEvent('theme_select', { theme: b.dataset.theme });
+  });
+})();
+
+(function hookModes(){
+  const root = q('#tirage-modal');
+  root?.addEventListener('click', (e)=>{
+    const b = e.target.closest?.('.mode');
+    if (!b) return;
+    logEvent('mode_select', { mode: parseInt(b.dataset.mode, 10) });
+  });
+})();
+
+(function hookQuestion(){
+  const ta = q('#user-question', q('#tirage-modal'));
+  ta?.addEventListener('input', ()=> logEvent('question_input', { len: ta.value.length }));
+})();
+
+(function hookFlips(){
+  const grid = q('#tarot-grid', q('#tirage-modal'));
+  grid?.addEventListener('click', (e)=>{
+    const btn = e.target.closest?.('.tarot-card');
+    if (!btn) return;
+    const face = btn.querySelector?.('.front img');
+    if (!face) return;
+    const label = face.alt || '';
+    const card = TAROT_FACES.find(c => c.label === label);
+    if (card) logEvent('card_flip', { n: card.n, slug: card.slug, label: card.label });
+  });
+})();
+
+
+
+// reset → démarre une nouvelle “sous-session”
+const _origHandleResetClick = handleResetClick;
+handleResetClick = function wrappedReset(){
+  logEvent('reset', {});
+  SESSION.id = String(Date.now());
+  SESSION.startedAt = new Date().toISOString();
+  SESSION.events = [];
+  SESSION.result = null;
+  _origHandleResetClick();
+};
+
+function addActionButtons(){
+  const wrap = q('#ia-reading .card'); 
+  if (!wrap) return;
+
+  // ---------- Nouveau tirage ----------
+  let newBtn = q('#new-draw-btn');
+  if (!newBtn){
+    newBtn = document.createElement('button');
+    newBtn.id = 'new-draw-btn';
+    newBtn.type = 'button';
+    newBtn.className = 'btn';
+    newBtn.textContent = 'Nouveau tirage';
+    newBtn.style.marginTop = '12px';
+
+    newBtn.addEventListener('click', ()=> {
+  // 1) Reset sélection & picks
+  resetSelectionAndGrid({ clearPicks: true });
+  S.theme = null; 
+  S.mode = null; 
+  S.flips = 0; 
+  S.selected = [];
+
+  // 2) Réinitialise question et thème
+  const qTA = q('#tirage-modal #user-question');
+  if (qTA) qTA.value = '';
+  const badge = q('#tirage-modal #theme-selected');
+  if (badge) badge.hidden = true;
+  const qWrap = q('#tirage-modal #theme-question');
+  if (qWrap) qWrap.hidden = true;
+
+  // 3) Message par défaut
+  const out = q('#reading-output');
+  if (out) out.textContent =
+    'Choisissez un thème, posez votre question (optionnel), puis choisissez 3 ou 5 cartes.';
+
+  // 4) Scroll en haut du popup (modal) après reflow
+  requestAnimationFrame(() => {
+    const cont = q('#tirage-modal .modal__content');
+    if (cont) {
+      try { cont.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
+      cont.scrollTop = 0; // fallback
+    }
+    if (out) {
+      try { out.scrollTo({ top: 0, behavior: 'smooth' }); } catch {}
+      out.scrollTop = 0; // fallback
+    }
+  });
+});
+
+wrap.appendChild(newBtn);
+
+  }
+
+  // ---------- Opanoma.fr ----------
+  let homeBtn = q('#opanoma-btn');
+  if (!homeBtn){
+    homeBtn = document.createElement('button');
+    homeBtn.id = 'opanoma-btn';
+    homeBtn.type = 'button';
+    homeBtn.className = 'btn';
+    homeBtn.textContent = 'Opanoma.fr';
+    homeBtn.style.marginTop = '12px';
+
+    homeBtn.addEventListener('click', ()=>{
+      const out = q('#reading-output');
+      if (out) out.textContent = 'Choisissez un thème, posez votre question (optionnel), puis choisissez 3 ou 5 cartes.';
+
+      resetSelectionAndGrid({ clearPicks: true });
+
+      const modal = document.getElementById('tirage-modal');
+      if (modal && modal.hasAttribute('open')) {
+        modal.removeAttribute('open');
+        modal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }
+
+      const hero = document.getElementById('top');
+      setTimeout(()=>{
+        if (hero) {
+          hero.scrollIntoView({ behavior:'smooth', block:'start' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 30);
+    });
+
+    wrap.appendChild(homeBtn);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', addActionButtons);
+
+function ensureModalHint(text){
+  const head  = q('#tirage-modal .modal__head');
+  const title = q('#tirage-modal .modal__title');
+  if (!head || !title) return;
+
+  // wrapper autour du titre si absent
+  let wrap = q('#tirage-modal .modal__titlewrap');
+  if (!wrap){
+    wrap = document.createElement('div');
+    wrap.className = 'modal__titlewrap';
+    title.replaceWith(wrap);
+    wrap.appendChild(title);
+  }
+
+  // span hint si absent
+  let hint = q('#modal-hint');
+  if (!hint){
+    hint = document.createElement('span');
+    hint.id = 'modal-hint';
+    hint.className = 'modal__hint';
+    wrap.appendChild(hint);
+  }
+  hint.textContent = text || 'Choisissez un thème, posez votre question (optionnel), puis choisissez 3 ou 5 cartes.';
+}
+
+
+
+// ================== MODAL OPEN/CLOSE ==================
+(function(){
+  const modal   = q('#tirage-modal');
+  const openBtn = q('[data-open-modal="tirage-modal"]');
+  const closers = modal ? qa('[data-close="modal"]', modal) : [];
+  let lastFocus = null;
+
+  function openModal(){
+  if (!modal) return;
+  lastFocus = document.activeElement;
+  modal.setAttribute('open','');
+  modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+
+  // ← ajoute cette ligne pour afficher l’indication à côté du titre
+  ensureModalHint('Choisissez un thème, posez votre question (optionnel), puis choisissez 3 ou 5 cartes.');
+
+  window.TAROT_UI?.boot();
+  requestAnimationFrame(()=> window.TAROT_UI?.renderPicks?.());
+}
+
+
+  function closeModal(){
+    if (!modal) return;
+    resetSelectionAndGrid({ clearPicks: true }); // efface la bande à la fermeture
+    modal.removeAttribute('open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  if (openBtn) openBtn.addEventListener('click', (e)=>{ e.preventDefault(); openModal(); });
+  closers.forEach(btn=> btn.addEventListener('click', closeModal));
+  if (modal) modal.addEventListener('click', (e)=>{ if (e.target?.dataset?.close === 'modal') closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && modal?.hasAttribute('open')) closeModal(); });
+
+  // ✅ Expose proprement dans la portée avant de fermer l’IIFE
+  window.TAROT_UI = window.TAROT_UI || {};
+  window.TAROT_UI.openModal  = openModal;
+  window.TAROT_UI.closeModal = closeModal;
+})(); // ← une seule fois, pas deux
+})();
+</script>
+
+</body>
+</html>
+

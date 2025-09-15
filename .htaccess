@@ -1,0 +1,63 @@
+# /public_html/.htaccess — Opanoma.fr
+DirectoryIndex index.html
+Options -Indexes
+
+<IfModule mod_headers.c>
+  # Nettoie d'abord toute CSP envoyée ailleurs
+  Header always unset Content-Security-Policy
+
+  # CSP unique : MailerLite (classic embed) + Google Fonts
+  Header always set Content-Security-Policy "default-src 'self'; \
+    script-src 'self' 'unsafe-inline' https://groot.mailerlite.com https://assets.mailerlite.com https://assets.mlcdn.com; \
+    style-src  'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.mlcdn.com https://assets.mailerlite.com https://fonts.mailerlite.com; \
+    img-src    'self' data: https:; \
+    font-src   'self' https://fonts.gstatic.com https://assets.mlcdn.com https://assets.mailerlite.com https://fonts.mailerlite.com data:; \
+    frame-src  https://groot.mailerlite.com https://assets.mailerlite.com; \
+    connect-src 'self' https://groot.mailerlite.com https://assets.mailerlite.com https://assets.mlcdn.com; \
+    base-uri 'self'; form-action 'self' https://assets.mailerlite.com https://groot.mailerlite.com"
+</IfModule>
+
+
+
+
+# === Assets : cache long ===
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # Surtout pas de valeur par défaut non nulle (sinon ça touche l’HTML)
+  ExpiresDefault "access plus 0 seconds"
+  ExpiresByType text/html "access plus 0 seconds"
+
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/avif "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType video/mp4 "access plus 7 days"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# === HTTPS & domaine canonique ===
+RewriteEngine On
+
+# Forcer HTTPS
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Rediriger www → racine
+RewriteCond %{HTTP_HOST} ^www\.opanoma\.fr$ [NC]
+RewriteRule ^ https://opanoma.fr%{REQUEST_URI} [R=301,L]
+
+# Rediriger addon-opanoma → racine
+RewriteCond %{HTTP_HOST} ^addon-opanoma\.fr\.ciyu0696\.odns\.fr$ [NC]
+RewriteRule ^ https://opanoma.fr%{REQUEST_URI} [R=301,L]
+
+# === API tarot ===
+# /api/tarot/summarize → /api/tarot/summarize/index.php
+RewriteRule ^api/tarot/summarize$ api/tarot/summarize/index.php [L,QSA,NC]
+
+
+
+

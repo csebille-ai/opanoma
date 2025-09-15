@@ -1,0 +1,13 @@
+Options -MultiViews
+RewriteEngine On
+
+# Laisse passer les fichiers/dossiers réels (ex: summarize.js)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Route explicitement les 3 sous-apps
+RewriteRule ^summarize/?$ summarize/index.php [L,QSA]
+RewriteRule ^track/?$     track/index.php     [L,QSA]
+RewriteRule ^admin/?$     admin/index.php     [L,QSA]
+
